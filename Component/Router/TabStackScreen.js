@@ -9,6 +9,7 @@ import NoticeListPage from "../Tab/NoticeListPage"
 import MainPage from "../Tab/MainPage"
 
 import NoticePage from "../Tab/View/NoticePage";
+import MyPage from "../Tab/View/MyPage";
 
 const TabStack = createBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -19,6 +20,7 @@ const MainStackScreen = () => {
     return(
         <MainStack.Navigator>
             <MainStack.Screen name = "로드맵 추천 서비스" component={MainPage}/>
+            <MainStack.Screen name = "MyPage" component = {MyPage}/>
         </MainStack.Navigator>
     );
 }
