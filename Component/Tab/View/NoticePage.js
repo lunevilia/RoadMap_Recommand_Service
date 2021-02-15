@@ -1,7 +1,7 @@
 import React, {Component, useState} from 'react';
 import {View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button} from 'react-native';
 
-const SocialDetailPage = (props) => {
+const NoticePage = (props) => {
 
   let noticeName = props.route.params.noticeName;
 
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
   },
   });
 
-export default SocialDetailPage;
+export default NoticePage;
