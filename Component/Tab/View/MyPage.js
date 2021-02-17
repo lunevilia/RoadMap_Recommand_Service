@@ -1,13 +1,14 @@
 import React, {Component, useState} from 'react';
+import {StackActions} from "@react-navigation/native";
 import {View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button} from 'react-native';
 
-const MyPage = (props) => {
+const MyPage = (props, {navigation}) => {
 
     let userId = props.route.params.userId;
     let [userEmail, userEmailModified] = useState(["0410garam@naver.com"]);
     return(
       <SafeAreaView style ={styles.container}>
-        <View style = {styles.block}>
+        <View style = {styles.block_1}>
           <Image source = {require("../../../assets/favicon.png")}></Image>
           <Text style = {styles.id}>
             {userId}
@@ -17,7 +18,7 @@ const MyPage = (props) => {
           </Text>
         </View>
 
-        <View style = {styles.block}>
+        <View style = {styles.block_2}>
           <TouchableOpacity>
             <Text style = {styles.smalltxt}>북마크</Text>
           </TouchableOpacity>
@@ -26,6 +27,14 @@ const MyPage = (props) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <Text style = {styles.smalltxt}>설정</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+          onPress={() =>{
+            navigation.dispatch(
+                StackActions.replace('login')
+            )
+          }}>
+            <Text style = {styles.smalltxt}>로그아웃</Text>
           </TouchableOpacity>
           <TouchableOpacity>
             <Text style = {{fontSize : 20, fontWeight : 'bold', color : 'skyblue', padding : 20}}>회원탈퇴</Text>
@@ -46,9 +55,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column', // row
     backgroundColor: 'white',
   },
-  block : {
+  block_1 : {
     padding : 20,
     marginTop : 20,
+    alignItems : 'center'
+  },
+  block_2 : {
+    padding : 20,
     alignItems : 'center'
   },
   profile : {
