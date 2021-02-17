@@ -6,6 +6,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import LoginPage from "../Login/LoginPage";
+import SignUp from "../Login/SignUp";
 
 import RoadMapCategoryPage from "../Tab/RoadMapCategoryPage"
 import NoticeListPage from "../Tab/NoticeListPage"
@@ -15,6 +16,7 @@ import NoticePage from "../Tab/View/NoticePage";
 import MyPage from "../Tab/View/MyPage";
 
 const TabStack = createBottomTabNavigator();
+const SignUpStack = createStackNavigator();
 
 const MainStack = createStackNavigator();
 const RoadMapCategoryStack = createStackNavigator();
@@ -87,10 +89,19 @@ const TabStackScreen = () => {
     );
 }
 
+const SignUpScreen = () => {
+    return(
+        <SignUpStack.Navigator>
+            <SignUpStack.Screen name = "회원가입" component = {SignUp}/>
+        </SignUpStack.Navigator>
+    );
+}
+
 const Main = () => {
     return(
         <AppStack.Navigator screenOptions={{headerShown:false}}>
             <AppStack.Screen name = "login" component = {LoginPage}/>
+            <AppStack.Screen name = "회원가입" component = {SignUpScreen}/>
             <AppStack.Screen name = "main" component = {TabStackScreen}/>
         </AppStack.Navigator>
     );

@@ -13,10 +13,10 @@ const LoginPage = ({navigation}) => {
                 <View style={styles.formArea}>
                     <TextInput 
                         style={styles.textForm} 
-                        placeholder={"ID"}/>
+                        placeholder={"아이디 입력"}/>
                     <TextInput 
                         style={styles.textForm} 
-                        placeholder={"Password"}/>
+                        placeholder={"비밀번호"}/>
                 </View>
 
                 <View style={styles.buttonArea}>
@@ -34,7 +34,7 @@ const LoginPage = ({navigation}) => {
                         style = {styles.button}
                         onPress = {() => {
                             navigation.dispatch(
-                                StackActions.replace('signin')
+                                StackActions.replace('회원가입')
                             )
                         }}>
                         <Text style = {styles.buttonTitle}>회원가입</Text>
@@ -60,34 +60,39 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: wp('10%'),
+        fontWeight : 'bold',
     },
     formArea: {
         width: '100%',
+        alignItems : 'center',
         paddingBottom: wp('10%'),
     },
     textForm: {
         borderWidth: 0.5,
         borderColor: '#888',
-        width: '100%',
+        width: '80%',
         height: hp('5%'),
         paddingLeft: 5,
         paddingRight: 5,
         marginBottom: 5,
     },
     buttonArea: {
+        alignItems : 'center',
         width: '100%',
         height: hp('5%'),
     },
     button: {
         backgroundColor: "skyblue",
-        width: "100%",
+        width: "50%",
         height: "100%",
         marginTop : 5,
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius : 20,
     },
     buttonTitle: {
         color: 'white',
+        fontWeight : 'bold',
     },
 });
 
