@@ -16,6 +16,7 @@ import NoticePage from "../Tab/View/NoticePage";
 import MyPage from "../Tab/View/MyPage";
 import RoadMapSocial from "../Tab/View/RoadMapSocial";
 import RoadMap from "../Tab/View/RoadMap";
+import commentList from "../Tab/View/CommentList";
 
 const TabStack = createBottomTabNavigator();
 const SignUpStack = createStackNavigator();
@@ -23,8 +24,6 @@ const SignUpStack = createStackNavigator();
 const MainStack = createStackNavigator();
 const RoadMapCategoryStack = createStackNavigator();
 const NoticeListStack = createStackNavigator();
-
-const RoadMapStack = createStackNavigator();
 
 const AppStack = createStackNavigator();
 
@@ -35,6 +34,7 @@ const MainStackScreen = () => {
             <MainStack.Screen name = "MyPage" component = {MyPage}/>
             <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
             <MainStack.Screen name = "RoadMap" component = {RoadMap}/>
+            <MainStack.Screen name = "commentList" component = {commentList}/>
         </MainStack.Navigator>
     );
 }
