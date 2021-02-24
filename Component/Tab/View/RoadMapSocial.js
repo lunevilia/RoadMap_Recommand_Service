@@ -1,10 +1,13 @@
-import React, {Component, useState} from 'react';
-import {View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button, TextInput, KeyboardAvoidingView} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
 import{Menu, MenuOption, MenuOptions,MenuTrigger, MenuProvider} from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {KeyBoardAwareScrollVeiw} from 'react-native-keyboard-aware-scroll-view';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const RoadMapSocial = (props, {navigation}) => {
+
+  const scrollRef = useRef();
 
   let roadMapId = props.route.params.roadMapId;
   let roadmap = props.route.params.roadmap;
@@ -14,16 +17,80 @@ const RoadMapSocial = (props, {navigation}) => {
   let [user, setUser] = useState(["익명1", "익명2", "익명3", "익명4", "익명5"]);
   let [userComment, setUserComment] = useState(["이거 좀 괜찮네", "이거 좀 괜찮네", "이거 좀 괜찮네","이거 좀 괜찮네", "이거 좀 괜찮네"]);
   let [date, setDate] = useState(["2021-02-23 14:57", "2021-02-23 14:57", "2021-02-23 14:57", "2021-02-23 14:57", "2021-02-23 14:57"]);
-  let [like, setLike] = useState(["37"]);
+  let [like, setLike] = useState(["♡",37]);
 
-  console.log(roadMapId);
-  console.log(roadmap);
+  // console.log(roadMapId);
+  // console.log(roadmap);
+
+  //입력된 댓글을 저장하는 state
+  let [inputText, setInputText] = useState([""]);
+
+  //댓글 등록
+  const handleCommentButtonPress = () =>{
+
+    if(inputText == ""){
+
+    }
+
+    else{
+      var newCommentArray = [...userComment];
+      var newUserArray = [...user];
+      var newDateArray = [...date];
+  
+      var currentTime = new Date();
+  
+      var time = currentTime.getFullYear() + "-" + currentTime.getMonth() + "-" + currentTime.getDay() + " " + currentTime.getHours() + "-" + currentTime.getMinutes();
+  
+      newCommentArray.push(inputText);
+      newUserArray.push(userId);
+      newDateArray.push(time);
+  
+      setUser(newUserArray);
+      setUserComment(newCommentArray);
+      setDate(newDateArray);
+      
+      setInputText("");
+      
+    }
+
+  }
+
+  //좋아요 카운트
+  const getLike = () => {
+    var newLikeArray = [...like];
+    
+    if (newLikeArray[0].trim()==("♡")){
+      newLikeArray[0] = "♥";
+      newLikeArray[1] += 1; 
+    }
+    else {
+      newLikeArray[0] = "♡";
+      newLikeArray[1] -= 1;
+    }
+    setLike(newLikeArray);
+  }
+
+  const commentlist = user.map((user, index) => 
+    (              
+      <TouchableOpacity key={index} style = {styles.commentArea}>
+        <View style = {styles.imageandname}>
+          <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
+          <Text style = {styles.user}>{user}</Text>
+        </View>
+        <Text style = {styles.usercomment}>{userComment[index]}</Text>
+        <Text style = {styles.date}>{date[index]}</Text>
+      </TouchableOpacity>
+    )
+  );
 
     return(
       <MenuProvider>
-        <SafeAreaView style ={styles.container}>
-          <ScrollView>
+        <KeyboardAvoidingView keyboardVerticalOffset = {100} behavior = {Platform.OS == 'ios' ? 'padding' : 'height'}  style ={styles.container}>
 
+        <SafeAreaView>
+          <ScrollView ref={scrollRef} onContentSizeChange = {() =>{
+            scrollRef.current.scrollToEnd({animated : true})
+          }}>
             {/* 최상단 부분 */}
             <View style = {styles.topArea}>
               {/* 정보 상단 */}
@@ -62,74 +129,37 @@ const RoadMapSocial = (props, {navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
-            
-            
+                       
             {/* 하단 소셜 부분 */}
             <View style = {styles.bottomArea}>
-              
               <View style = {{flexDirection : 'row', justifyContent : 'space-between', margin : 10}}>
-                <TouchableOpacity onPress = {() =>{
-                    props.navigation.navigate("commentList", {roadMapId : roadMapId})
-                  }}>
-                    <Text style = {{fontSize : 30, fontWeight : 'bold'}} >댓글 ></Text>
-                  </TouchableOpacity>
-                <TouchableOpacity style = {styles.like}>
-                  <Text style = {styles.like}>♥{like}</Text>
+                <View>
+                    <Text style = {{fontSize : 30, fontWeight : 'bold'}} >댓글</Text>
+                  </View>
+                <TouchableOpacity style = {styles.like} onPress = {() => {
+                  getLike();
+                }}>
+                  <Text style = {styles.like}>{like[0]}{like[1]}</Text>
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style = {styles.commentArea}>
-                <View style = {styles.imageandname}>
-                  <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
-                  <Text style = {styles.user}>{user[0]}</Text>
-                </View>
-                <Text style = {styles.usercomment}>{userComment[0]}</Text>
-                <Text style = {styles.date}>{date[0]}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style = {styles.commentArea}>
-                <View style = {styles.imageandname}>
-                  <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
-                  <Text style = {styles.user}>{user[1]}</Text>
-                </View>
-                <Text style = {styles.usercomment}>{userComment[1]}</Text>
-                <Text style = {styles.date}>{date[1]}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style = {styles.commentArea}>
-                <View style = {styles.imageandname}>
-                  <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
-                  <Text style = {styles.user}>{user[2]}</Text>
-                </View>
-                <Text style = {styles.usercomment}>{userComment[2]}</Text>
-                <Text style = {styles.date}>{date[2]}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style = {styles.commentArea}>
-                <View style = {styles.imageandname}>
-                  <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
-                  <Text style = {styles.user}>{user[3]}</Text>
-                </View>
-                <Text style = {styles.usercomment}>{userComment[3]}</Text>
-                <Text style = {styles.date}>{date[3]}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style = {styles.commentArea}>
-                <View style = {styles.imageandname}>
-                  <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
-                  <Text style = {styles.user}>{user[4]}</Text>
-                </View>
-                <Text style = {styles.usercomment}>{userComment[4]}</Text>
-                <Text style = {styles.date}>{date[4]}</Text>
-              </TouchableOpacity>
-              
               <View style = {styles.insertcomment}>
-                <TextInput style = {styles.comment}>
+                <TextInput style = {styles.comment} onChangeText = {
+                  (inputText) => setInputText(inputText) 
+                }>
                 </TextInput>
-                <TouchableOpacity style = {{flex : 1, justifyContent : 'center', alignItems : 'center', backgroundColor : 'white', borderColor : 'gray', borderWidth : 1,borderRadius : 10, marginLeft : 5}}>
+                <TouchableOpacity style = {{flex : 1, justifyContent : 'center', alignItems : 'center', backgroundColor : 'white', borderColor : 'gray', borderWidth : 1,borderRadius : 10, marginLeft : 5}}
+                onPress = {handleCommentButtonPress}>
                   <Text style = {styles.insert}>▷</Text>
                 </TouchableOpacity>
               </View>
 
+              {commentlist}            
+
             </View>
           </ScrollView>
         </SafeAreaView>
+        </KeyboardAvoidingView>
       </MenuProvider>
     );
 }
@@ -137,6 +167,7 @@ const RoadMapSocial = (props, {navigation}) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    height : '100%',
     flex: 1,
     flexDirection: 'column', // row
     backgroundColor: 'white',
