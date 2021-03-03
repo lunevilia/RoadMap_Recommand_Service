@@ -4,10 +4,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import TabStackScreen from './Component/Router/TabStackScreen';
 
 export default function App() {
+
+  const ip = "172.20.10.6";
+
   return (
     <NavigationContainer>
       <SafeAreaView style = {{flex : 1}}>
-        <TabStackScreen></TabStackScreen>
+        <TabStackScreen ip = {ip}></TabStackScreen>
       </SafeAreaView>
     </NavigationContainer>
   );

@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import {StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-const MainPage = ({navigation}) => {
+const MainPage = (props,{navigation}) => {
 
-  const [userId, userIdModified] = useState(["garam0410"]);
+  const userId = props.userId;
+  const ip = "172.20.10.6";
+
+  // const userId = props.route.params.userId;
   const [bookName, setBookName] = useState(["책이름1", "책이름2", "책이름3", "책이름4", "책이름5", "책이름6"]);
   const [bookSrc, setBookSrc] = useState(["https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg"]);
   const [bookUrl, setBookUrl] = useState(["https://www.naver.com"]);
@@ -21,7 +24,7 @@ const MainPage = ({navigation}) => {
                 <Text style = {styles.rankName}>로드맵</Text>
 
                 <TouchableOpacity style = {{justifyContent : 'center', margin : 10}} onPress = {() =>{
-                    navigation.navigate("MyPage", {userId : userId[0]})
+                    props.navigation.navigate("MyPage", {userId : userId, ip : ip})
                   }}>
                   <Text style = {{color : 'blue', fontSize : 20}}>마이 페이지</Text>
                 </TouchableOpacity>
@@ -86,27 +89,27 @@ const MainPage = ({navigation}) => {
             <Text style = {styles.rankName}>인기 로드맵</Text>
                   <View style = {styles.roadMapRankArea}>
                   <TouchableOpacity onPress = {() =>{
-                    navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[0], roadmap : roadmap[0], userId : userId})
+                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[0], roadmap : roadmap[0], userId : userId, ip : ip})
                   }}>
                       <Text style = {styles.roadMapName}>1. {roadmap[0]}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress = {() =>{
-                    navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[1], roadmap : roadmap[1], userId : userId})
+                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[1], roadmap : roadmap[1], userId : userId, ip : ip})
                   }}>
                       <Text style = {styles.roadMapName}>2. {roadmap[1]}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress = {() =>{
-                    navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[2], roadmap : roadmap[2], userId : userId})
+                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[2], roadmap : roadmap[2], userId : userId, ip : ip})
                   }}>
                       <Text style = {styles.roadMapName}>3. {roadmap[2]}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress = {() =>{
-                    navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[3], roadmap : roadmap[3], userId : userId})
+                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[3], roadmap : roadmap[3], userId : userId, ip : ip})
                   }}>
                       <Text style = {styles.roadMapName}>4. {roadmap[3]}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress = {() =>{
-                    navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[4], roadmap : roadmap[4], userId : userId})
+                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[4], roadmap : roadmap[4], userId : userId, ip : ip})
                   }}>
                       <Text style = {styles.roadMapName}>5. {roadmap[4]}</Text>
                     </TouchableOpacity>

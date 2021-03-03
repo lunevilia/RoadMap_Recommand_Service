@@ -27,10 +27,10 @@ const NoticeListStack = createStackNavigator();
 
 const AppStack = createStackNavigator();
 
-const MainStackScreen = () => {
+const MainStackScreen = ({userId, ip}) => {
     return(
         <MainStack.Navigator>
-            <MainStack.Screen name = "로드맵 추천 서비스" component={MainPage}/>
+            <MainStack.Screen name = "로드맵 추천 서비스" children={({navigation})=><MainPage userId={userId} ip = {ip} navigation={navigation}/>}/>
             <MainStack.Screen name = "MyPage" component = {MyPage}/>
             <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
             <MainStack.Screen name = "RoadMap" component = {RoadMap}/>
@@ -38,24 +38,24 @@ const MainStackScreen = () => {
         </MainStack.Navigator>
     );
 }
-const RoadMapCategoryStackScreen = () => {
+const RoadMapCategoryStackScreen = ({userId, ip}) => {
     return(
         <RoadMapCategoryStack.Navigator>
-            <RoadMapCategoryStack.Screen name = "로드맵 카테고리" component={RoadMapCategoryPage}/>
+            <RoadMapCategoryStack.Screen name = "로드맵 카테고리" children={({navigation})=><RoadMapCategoryPage userId={userId} ip = {ip} navigation={navigation}/>}/>
         </RoadMapCategoryStack.Navigator>
     );
 }
-
-const NoticeListStackScreen = () => {
+const NoticeListStackScreen = ({userId, ip}) => {
     return(
         <NoticeListStack.Navigator>
-            <NoticeListStack.Screen name = "게시판" component={NoticeListPage}/>
+            <NoticeListStack.Screen name = "게시판" children={({navigation})=><NoticeListPage userId={userId} ip = {ip} navigation={navigation}/>}/>
             <NoticeListStack.Screen name = "NoticePage" component={NoticePage}/>
         </NoticeListStack.Navigator>
     );
 }
 
-const TabStackScreen = () => {
+const TabStackScreen = (props, {ip}) => {
+    const userId = props.route.params.userId;
     return(
         <TabStack.Navigator initialRouteName = "홈"
             screenOptions={({route}) => ({
@@ -89,26 +89,31 @@ const TabStackScreen = () => {
             }}
         >
             <TabStack.Screen name="카테고리" component={RoadMapCategoryStackScreen} />
-            <TabStack.Screen name="홈" component={MainStackScreen} />
-            <TabStack.Screen name="게시판" component={NoticeListStackScreen}/>
+            {/* <TabStack.Screen name="홈" component={MainStackScreen} /> */}
+            <TabStack.Screen name="홈" children={({navigation})=><MainStackScreen userId={userId} ip = {ip} navigation={navigation}/>}/>
+            <TabStack.Screen name="게시판" component={NoticeListStackScreen} />
         </TabStack.Navigator>
     );
 }
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ip}) => {
     return(
         <SignUpStack.Navigator>
-            <SignUpStack.Screen name = "회원가입" component = {SignUp}/>
+            <SignUpStack.Screen name = "회원가입" children={({navigation})=><SignUp ip = {ip} navigation={navigation}/>}/>
         </SignUpStack.Navigator>
     );
 }
 
-const Main = () => {
+const Main = (props) => {
+    //console.log(props.ip);
+    const ip = props.ip;
     return(
         <AppStack.Navigator screenOptions={{headerShown:false}}>
-            <AppStack.Screen name = "login" component = {LoginPage}/>
-            <AppStack.Screen name = "회원가입" component = {SignUpScreen}/>
-            <AppStack.Screen name = "main" component = {TabStackScreen}/>
+            <AppStack.Screen name = "login" children={({navigation})=><LoginPage ip = {ip} navigation={navigation}/>}/>
+            <AppStack.Screen name = "회원가입" children={({navigation})=><SignUpScreen ip = {ip} navigation={navigation}/>}/>
+            {/* <AppStack.Screen name = "main" children={({navigation})=><TabStackScreen ip = {ip} navigation={navigation}/>}/> */}
+            <AppStack.Screen name = "main" component={TabStackScreen}/>
+            {/* <AppStack.Screen name = "main" component={TabStackScreen}/> */}
         </AppStack.Navigator>
     );
 }
