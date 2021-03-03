@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <!-- 쿼리문 작성 -->
+    
+<mapper namespace="com.roadmap.roadmapservice.dao.UserMapper">
+	<!-- 회원가입 진행 -->
+	<insert id="insertUser" parameterType="userDto">
+        INSERT INTO USERINFO(USERID, USERPW, USEREMAIL, USERWORK) VALUES (#{userId}, #{userPw}, #{userEmail}, #{userWork})
+    </insert>
+    
+    <insert id="insertMajor" parameterType="String">
+    	INSERT INTO USERMAJOR VALUES(#{uid},#{major})
+    </insert>
+    
+    <!-- 중복 회원 확인  -->
+     <select id='checkUser' parameterType="string" resultType="string">
+     	SELECT UID FROM USERINFO WHERE USERID=#{userId}
+     </select>
+     
+     <!-- 로그인 진행 -->
+     <select id = 'login' parameterType="string" resultType="string">
+     	SELECT USERID, USERPW FROM USERINFO WHERE USERID=#{userId} and USERPW=#{userPw}
+     </select>
+     
+     <select id = 'getemail' parameterType = "string" resultType = "string">
+     	SELECT USEREMAIL FROM USERINFO WHERE USERID = #{userId}
+     </select>
+     
+    <delete id="deleteUser" parameterType="string">
+        DELETE FROM USERINFO WHERE userId = #{userId}
+    </delete>
+    
+    <delete id="deleteMajor" parameterType = "string">
+    	DELETE FROM USERMAJOR WHERE UID = #{uid}
+    </delete>
+    
+<!--     <update id="updateUser" parameterType="userDto">
+        UPDATE user 
+        SET userPw = #{userPw}, userName = #{userName}, userGender = #{userGender}, userEmail = #{userEmail} 
+        WHERE userId = #{userId}
+    </update>     -->
+    
+
+     
+     
+<!--     <select id="selectOneUser" parameterType="string" resultType="userDto">
+        SELECT * FROM USERINFO WHERE userId = #{userId}
+    </select>
+
+    <select id="selectAllUser" resultType="userDto">
+        SELECT * FROM USERINFO
+    </select> -->
+</mapper>
