@@ -1,13 +1,115 @@
 import React, {Component, useState} from 'react';
 import {StackActions} from "@react-navigation/native";
-import {View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button} from 'react-native';
+import {Modal,View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button} from 'react-native';
+import axios from 'axios';
 
 const MyPage = (props, {navigation}) => {
 
     let userId = props.route.params.userId;
-    let [userEmail, userEmailModified] = useState(["0410garam@naver.com"]);
+    let ip = props.route.params.ip;
+    
+    const [userEmail, setUserEmail] = useState([""]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [head, setHead] = useState([""]);
+    const [body, setBody] = useState([""]);
+
+    async function checkout(){
+      try{
+        const response = await axios.get("http://"+ip+":8000/checkout",{
+          params : {
+            userId : userId,
+          }
+        });
+  
+      }catch(error) {
+        console.error(error);
+      }
+    }
+
+    (async function getEmail(){
+      try{
+        const response = await axios.get("http://"+ip+":8000/getemail",{
+          params : {
+            userId : userId,
+          }
+        });
+        
+        let result = response.data
+        
+        if (result != "") {
+          setUserEmail(result);
+        }
+  
+      }catch(error) {
+        console.error(error);
+      }
+    })()
+
+    const modalHeader=(
+      <View style={styles.modalHeader}>
+        <Text style={styles.title}>{head}</Text>
+        <View style={styles.divider}></View>
+      </View>
+    )
+    const modalBody=(
+      <View style={styles.modalBody}>
+        <Text style={styles.bodyText}>{body}</Text>
+      </View>
+    )
+    const modalFooter=(
+      <View style={styles.modalFooter}>
+        <View style={styles.divider}></View>
+        <View style={{flexDirection:"row-reverse",margin:10}}>
+          <TouchableOpacity style={{...styles.actions,backgroundColor:"#db2828"}} 
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <Text style={styles.actionText}>No</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{...styles.actions,backgroundColor:"#21ba45"}}
+            onPress = {() => {
+              if(head == "회원탈퇴"){
+                checkout();
+                props.navigation.dispatch(
+                  StackActions.replace('login'));
+              }
+              else if (head == "로그아웃"){
+                props.navigation.dispatch(
+                  StackActions.replace('login'));
+              }
+            }}>
+            <Text style={styles.actionText}>Yes</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+    const modalContainer = (
+      <View style = {styles.modalContainer}>
+        {modalHeader}
+        {modalBody}
+        {modalFooter}
+      </View>
+    )
+
+    const modal = (
+      <Modal
+        animationType='fade'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <View style={styles.modal}>
+          <View>
+            {modalContainer}
+          </View>
+        </View>
+      </Modal>
+  )
+    
     return(
       <SafeAreaView style ={styles.container}>
+        {modal}
         <View style = {styles.block_1}>
           <Image source = {require("../../../assets/favicon.png")}></Image>
           <Text style = {styles.id}>
@@ -30,13 +132,18 @@ const MyPage = (props, {navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
           onPress={() =>{
-            navigation.dispatch(
-                StackActions.replace('login')
-            )
+            setModalVisible(true);
+            setHead("로그아웃");
+            setBody("로그아웃 하시겠습니까?")
           }}>
             <Text style = {styles.smalltxt}>로그아웃</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress = {() => {
+              setModalVisible(true);
+              setHead("회원탈퇴");
+              setBody("회원탈퇴 하시겠습니까?")
+            }}>
             <Text style = {{fontSize : 20, fontWeight : 'bold', color : 'skyblue', padding : 20}}>회원탈퇴</Text>
           </TouchableOpacity>
           <TouchableOpacity style = {{borderRadius : 20, backgroundColor : 'skyblue'}}>
@@ -79,6 +186,47 @@ const styles = StyleSheet.create({
     fontWeight : 'bold',
     color : 'darkgray',
     padding : 20
+  },
+  modal:{
+    backgroundColor:"#00000099",
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContainer:{
+    backgroundColor:"#f9fafb",
+    width:"80%",
+    borderRadius:5
+  },
+  modalHeader:{
+    
+  },
+  title:{
+    fontWeight:"bold",
+    fontSize:20,
+    padding:15,
+    color:"#000"
+  },
+  divider:{
+    width:"100%",
+    height:1,
+    backgroundColor:"lightgray"
+  },
+  modalBody:{
+    backgroundColor:"#fff",
+    paddingVertical:20,
+    paddingHorizontal:10
+  },
+  modalFooter:{
+  },
+  actions:{
+    borderRadius:5,
+    marginHorizontal:10,
+    paddingVertical:10,
+    paddingHorizontal:20
+  },
+  actionText:{
+    color:"#fff"
   }
   });
 

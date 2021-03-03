@@ -2,14 +2,81 @@ import React, { useState } from "react";
 import {StackActions} from "@react-navigation/native";
 import {StyleSheet, Text, ScrollView, TouchableOpacity, View, TextInput, SafeAreaView} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {Picker} from "@react-native-community/picker";
 import DropDownPicker from 'react-native-dropdown-picker';
+import axios from 'axios';
 
-const SignUp = ({navigation}) => {
+const SignUp = ({ip,navigation}) => {
 
-  const [Major, setMajor] = useState("웹");
-  // const [Work, setWork] = useState("사업가");
-  let Work;
+  const [inputId, setInputId] = useState([""]);
+  const [inputPw, setInputPw] = useState([""]);
+  const [inputPwCk, setInputPwCk] = useState([""]);
+  const [inputEmail, setInputEmail] = useState([""]);
+
+  const[userId, setUserId] = useState([""]);
+  const[userPw, setUserPw] = useState([""]);
+  const[userPwCk, setUserPwCk] = useState([""]);
+  const[userEmail, setUserEmail] = useState([""]);
+
+  const [Major, setMajor] = useState("");
+
+  const [Work, setWork] = useState([""])
+
+  const writeState = () =>{
+    // console.log(inputId, inputPw, inputPwCk, inputEmail, Major[0], Work);
+    if(inputId == ""){
+      alert("아이디를 입력해 주세요");
+    }
+    else if(inputPw == ""){
+      alert("비밀번호를 입력해 주세요");
+    }
+    else if(inputPwCk == ""){
+      alert("비밀번호 확인을 입력해 주세요");
+    }
+    else if(inputPw == ""){
+      alert("이메일을 입력해 주세요");
+    }
+    else if(Major == "" || Work == ""){
+      alert("추가정보를 입력해 주세요");
+    }
+    else if(inputPw != inputPwCk){
+      alert("비밀번호가 일치하지 않습니다.");
+    }
+    else {
+      register();
+    }
+  }
+//http://localhost:8000/register?userId=a&userPw=a&userEmail=a&work=a
+  async function register(){
+    try{
+      const response = await axios.get("http://"+ip+":8000/register",{
+        params : {
+          userId : inputId,
+          userPw : inputPw,
+          userEmail : inputEmail,
+          userWork : Work,
+          major : Major.join(",")
+        }
+      });
+      
+      let result = response.data
+      
+      if (result == "success") {
+        alert("회원가입에 성공하였습니다!");
+        navigation.dispatch(
+          StackActions.replace('login')
+        );
+      }
+      else if(result == "exist"){
+        alert("존재하는 아이디 입니다.");
+      }
+      else{
+        alert("회원가입에 실패하였습니다.");
+      }
+
+    }catch(error) {
+      console.error(error);
+    }
+  }
 
   return(
     <SafeAreaView style = {styles.container}>
@@ -27,32 +94,44 @@ const SignUp = ({navigation}) => {
                     <View style={styles.formArea}>
                         <TextInput 
                           style={styles.textForm} 
-                          placeholder={"아이디 입력"}/>
-                        <TouchableOpacity style = {styles.checkButton}>
+                          placeholder={"아이디 입력"}
+                          onChangeText = {
+                            (inputId) => setInputId(inputId)
+                          }/>
+                        {/* <TouchableOpacity style = {styles.checkButton}>
                           <Text style = {styles.checkButtonTitle}>
                             중복 확인
                           </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={styles.formArea}>
                         <TextInput 
                           style={styles.textForm} 
-                          placeholder={"비밀번호 입력"}/>
+                          placeholder={"비밀번호 입력"}
+                          onChangeText = {
+                            (inputPw) => setInputPw(inputPw)
+                          }/>
                     </View>
                     <View style={styles.formArea}>
                         <TextInput 
                           style={styles.textForm} 
-                          placeholder={"비밀번호 확인"}/>
+                          placeholder={"비밀번호 확인"}
+                          onChangeText = {
+                            (inputPwCk) => setInputPwCk(inputPwCk)
+                          }/>
                     </View>
                     <View style={styles.formArea}>
                         <TextInput 
                           style={styles.textForm} 
-                          placeholder={"이메일 입력"}/>
-                        <TouchableOpacity style = {styles.checkButton}>
+                          placeholder={"이메일 입력"}
+                          onChangeText = {
+                            (inputEmail) => setInputEmail(inputEmail)
+                          }/>
+                        {/* <TouchableOpacity style = {styles.checkButton}>
                           <Text style = {styles.checkButtonTitle}>
                             중복 확인
                           </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
             </View>
 
@@ -64,21 +143,20 @@ const SignUp = ({navigation}) => {
 
               <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
                 items = {[
-                  {label : "사업가", value : '1'},
-                  {label : "초등학생", value : '2'},
-                  {label : "중학생", value : '3'},
-                  {label : "고등학생", value : '4'},
-                  {label : "대학생", value : '5'},
-                  {label : "취업준비생", value : '6'},
+                  {label : "사업가", value : 'ceo'},
+                  {label : "초등학생", value : 'elementary'},
+                  {label : "중학생", value : 'middle'},
+                  {label : "고등학생", value : 'high'},
+                  {label : "대학생", value : 'college'},
+                  {label : "취업준비생", value : 'readyworker'},
                 ]}
 
-                defaultValue = {Work}
                 containerStyle = {{height : 50, padding : 5}}
                 itemStyle ={{
                   justifyContent : 'flex-start'
                 }}
                 onChangeItem = {item => {
-                  Work = item;
+                  setWork(item.value);
                   }
                 }
                 >
@@ -86,14 +164,14 @@ const SignUp = ({navigation}) => {
 
               <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
                 items = {[
-                  {label : "웹", value : '1'},
-                  {label : "앱", value : '2'},
-                  {label : "인공지능", value : '3'},
-                  {label : "블록체인", value : '4'},
-                  {label : "보안", value : '5'},
-                  {label : "빅데이터", value : '6'},
-                  {label : "디자이너", value : '7'},
-                  {label : "기획", value : '8'},
+                  {label : "웹", value : 'web'},
+                  {label : "앱", value : 'app'},
+                  {label : "인공지능", value : 'ai'},
+                  {label : "블록체인", value : 'blockchain'},
+                  {label : "보안", value : 'protect'},
+                  {label : "빅데이터", value : 'bigdata'},
+                  {label : "디자이너", value : 'designer'},
+                  {label : "기획", value : 'planner'},
                 ]}
 
                 multiple = {true}
@@ -105,8 +183,9 @@ const SignUp = ({navigation}) => {
                 itemStyle ={{
                   justifyContent : 'flex-start'
                 }}
-                onChangeItem = {item => {
-                  setMajor(item);}
+                onChangeItem = {(item) => {
+                  setMajor(item);
+                }
                 }
                 >
               </DropDownPicker>
@@ -125,11 +204,7 @@ const SignUp = ({navigation}) => {
 
               <TouchableOpacity
                   style = {styles.button}
-                  onPress = {() => {
-                  navigation.dispatch(
-                    StackActions.replace('login')
-                    )
-                  }}>
+                  onPress = {writeState}>
                   <Text style = {styles.buttonTitle}>회원가입</Text>
               </TouchableOpacity>
             </View>
@@ -200,7 +275,7 @@ checkButtonTitle: {
 textForm: {
     borderWidth: 0.5,
     borderColor: '#888',
-    width: '60%',
+    width: '100%',
     height: hp('5%'),
     paddingLeft: 5, 
     paddingRight: 5,
