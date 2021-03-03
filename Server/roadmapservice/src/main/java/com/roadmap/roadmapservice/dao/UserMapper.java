@@ -19,8 +19,10 @@ public interface UserMapper {
 	//로그인 확인 쿼리
 	public String login(String userId, String userPw);
 	
+	//마이페이지 이메일 get
 	public String getemail(String userId);
 	
+	// 회원 탈퇴
 	public void deleteMajor(String uid);
 	public void deleteUser (String userId);
 

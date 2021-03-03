@@ -25,10 +25,12 @@
      	SELECT USERID, USERPW FROM USERINFO WHERE USERID=#{userId} and USERPW=#{userPw}
      </select>
      
+     <!-- 마이페이지 이메일 get -->
      <select id = 'getemail' parameterType = "string" resultType = "string">
      	SELECT USEREMAIL FROM USERINFO WHERE USERID = #{userId}
      </select>
      
+     <!-- 회원 탈퇴 -->
     <delete id="deleteUser" parameterType="string">
         DELETE FROM USERINFO WHERE userId = #{userId}
     </delete>
@@ -36,6 +38,8 @@
     <delete id="deleteMajor" parameterType = "string">
     	DELETE FROM USERMAJOR WHERE UID = #{uid}
     </delete>
+    
+    
     
 <!--     <update id="updateUser" parameterType="userDto">
         UPDATE user 
