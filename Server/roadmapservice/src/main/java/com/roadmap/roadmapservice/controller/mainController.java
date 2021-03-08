@@ -23,24 +23,29 @@ public class mainController {
 	
 	//GET 요청을 받기 위한 Mapping 어노테이션(PostMapping, DeleteMapping, PutMapping 이 있음.)
 	
+	@GetMapping(path = "/test")
+	public String test() {
+		return "success";
+	}
+	
 	// 회원가임
 	@GetMapping(path = "/register")
-	public String register(@RequestParam String userId, String userPw, String userEmail, String userWork, String major) {
+	public String register(@RequestParam String userName, String userId, String userPw, String userAge, String userArea, String userJob, String userInterest, String userEmail, String userPhone, String userSex) {
 		
 		if(uMapper.checkUser(userId)==null) {		
 			UserDto user = new UserDto();
+			user.setUserName(userName);
 			user.setUserId(userId);
 			user.setUserPw(userPw);
+			user.setUserAge(Integer.parseInt(userAge));
+			user.setUserArea(userArea);
+			user.setUserJob(userJob);
+			user.setUserInterest(userInterest);
 			user.setUserEmail(userEmail);
-			user.setUserWork(userWork);
+			user.setUserPhone(userPhone);
+			user.setUserSex(userSex);
+			
 			uMapper.insertUser(user);
-			
-			String uid = uMapper.checkUser(userId);
-			String[] array = major.split(",");
-			
-			for(int i = 0; i<array.length; i++) {				
-				uMapper.insertMajor(uid, array[i]);
-			}
 			
 			result = "success";
 		}
@@ -82,7 +87,6 @@ public class mainController {
 		
 		String uid = uMapper.checkUser(userId);
 		System.out.println(uid);
-		uMapper.deleteMajor(uid);
 		uMapper.deleteUser(userId);
 	}
 	//	@GetMapping(path = "/test")

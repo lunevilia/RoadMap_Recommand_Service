@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  
 @Configuration
+//@MapperScan(basePackages = "com.roadmap.roadmapservice.dao")
 @MapperScan(basePackages = "com.roadmap.roadmapservice.dao")
 public class MyBatisConfig {
     
