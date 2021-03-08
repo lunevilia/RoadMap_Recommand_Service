@@ -15,7 +15,7 @@ const MyPage = (props, {navigation}) => {
 
     async function checkout(){
       try{
-        const response = await axios.get("http://"+ip+":8000/checkout",{
+        const response = await axios.get("http://"+ip+"/checkout",{
           params : {
             userId : userId,
           }
@@ -28,7 +28,7 @@ const MyPage = (props, {navigation}) => {
 
     (async function getEmail(){
       try{
-        const response = await axios.get("http://"+ip+":8000/getemail",{
+        const response = await axios.get("http://"+ip+"/getemail",{
           params : {
             userId : userId,
           }

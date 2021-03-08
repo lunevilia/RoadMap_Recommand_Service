@@ -1,18 +1,82 @@
 import React, { useState } from "react";
 import {StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import axios from 'axios';
 
 const MainPage = (props,{navigation}) => {
 
   const userId = props.userId;
-  const ip = "172.20.10.6";
-
+  const ip = "193.123.247.150:8080";
+  const api = "KakaoAK aef53ecb905e1cbffcf4b411286c0ca0";
+  
   // const userId = props.route.params.userId;
-  const [bookName, setBookName] = useState(["책이름1", "책이름2", "책이름3", "책이름4", "책이름5", "책이름6"]);
-  const [bookSrc, setBookSrc] = useState(["https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg"]);
-  const [bookUrl, setBookUrl] = useState(["https://www.naver.com"]);
+  const [bookName, setBookName] = useState(["책 이게 뭐라고", "C 프로그래밍", "표백", "책 한번 써봅시다", "알바생 자르기", "호빗"]);
+  const [bookSrc, setBookSrc] = useState(["-","-","-","-","-","-"]);
+  const [bookUrl, setBookUrl] = useState(["-","-","-","-","-","-"]);
   const [roadmap, setRoadMap] = useState(["웹 개발자 로드맵", "이거면 하나면 나도 보안 전문가!", "인공지능학개론", "분산 처리의 정석", "나만의 비밀노트"])
   const [roadMapId, setRoadMapId] = useState(["0", "1", "2", "3", "4"])
+
+  const [getbook, setGetBook] = useState(["0"]);
+
+  if(getbook == "0"){
+    getBookInfo();
+    setGetBook("1")
+  }
+
+  // https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book
+  async function getBookInfo(){
+    var newSrcArray = [...bookSrc];
+    var newUrlArray = [...bookUrl];
+  
+    for(var i = 0; i<bookName.length; i++){
+      try {
+        const response = await axios.get("https://dapi.kakao.com/v3/search/book?",{
+          params : {
+            sort : 'accuracy',
+            page : 1,
+            size : 1,
+            query : bookName[i]
+          },
+          headers: {
+            Authorization: api
+          }
+        });
+  
+        let result = response.data;
+        newSrcArray[i] = result.documents[0].thumbnail;
+        newUrlArray[i] = result.documents[0].url;
+  
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  
+    setBookSrc(newSrcArray);
+    setBookUrl(newUrlArray);
+    console.log("success");
+  }
+
+  //책 목록 컴포넌트화
+  const bookList = bookSrc.map((bookSrc, index) => 
+    (              
+      <TouchableOpacity key = {index} style = {styles.imageArea} onPress ={() =>{
+        Linking.openURL(bookUrl[index])
+      }}>
+        <Image style = {styles.image} source = {{uri : bookSrc}}></Image> 
+        <Text style = {styles.imageName}>{bookName[index]}</Text>
+      </TouchableOpacity>
+    )
+  );
+    
+  //로드맵 순위 컴포넌트화
+  const roadMapList = roadmap.map((roadmap, index) =>(
+    <TouchableOpacity key = {index} onPress = {() =>{
+      props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[index], roadmap : roadmap, userId : userId, ip : ip})
+    }}>
+        <Text style = {styles.roadMapName}>{index+1}.  {roadmap}</Text>
+      </TouchableOpacity>
+    )
+  );
 
   return(
     <SafeAreaView style={styles.container}>
@@ -38,47 +102,12 @@ const MainPage = (props,{navigation}) => {
             <View style = {styles.line}></View>
 
           {/* 인기 책순위  */}
-          <View style = {styles.rankArea}>
+          <View style = {styles.rankArea} >
 
-            <Text style = {styles.rankName}>인기 책 순위</Text>
+            <Text style = {styles.rankName} onPress = {getBookInfo}>인기 책 순위</Text>
 
             <ScrollView horizontal = {true}>
-              <TouchableOpacity style = {styles.imageArea} onPress ={() =>{
-                  Linking.openURL(bookUrl[0])
-                }}>
-                  <Image style = {styles.image} source = {{uri : bookSrc[0]}}></Image> 
-                  <Text style = {styles.imageName}>{bookName[0]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.imageArea} onPress ={() =>{
-                  Linking.openURL(bookUrl[0])
-                }}>
-                  <Image style = {styles.image} source = {{uri : bookSrc[0]}}></Image> 
-                  <Text style = {styles.imageName}>{bookName[1]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.imageArea} onPress ={() =>{
-                  Linking.openURL(bookUrl[0])
-                }}>
-                  <Image style = {styles.image} source = {{uri : bookSrc[0]}}></Image> 
-                  <Text style = {styles.imageName}>{bookName[2]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.imageArea} onPress ={() =>{
-                  Linking.openURL(bookUrl[0])
-                }}>
-                  <Image style = {styles.image} source = {{uri : bookSrc[0]}}></Image> 
-                  <Text style = {styles.imageName}>{bookName[3]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.imageArea} onPress ={() =>{
-                  Linking.openURL(bookUrl[0])
-                }}>
-                  <Image style = {styles.image} source = {{uri : bookSrc[0]}}></Image> 
-                  <Text style = {styles.imageName}>{bookName[4]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style = {styles.imageArea} onPress ={() =>{
-                  Linking.openURL(bookUrl[0])
-                }}>
-                  <Image style = {styles.image} source = {{uri : bookSrc[0]}}></Image>  
-                  <Text style = {styles.imageName}>{bookName[5]}</Text>
-                </TouchableOpacity>
+                {bookList}
             </ScrollView>
           </View>
 
@@ -88,31 +117,7 @@ const MainPage = (props,{navigation}) => {
           <View style = {styles.rankArea}>
             <Text style = {styles.rankName}>인기 로드맵</Text>
                   <View style = {styles.roadMapRankArea}>
-                  <TouchableOpacity onPress = {() =>{
-                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[0], roadmap : roadmap[0], userId : userId, ip : ip})
-                  }}>
-                      <Text style = {styles.roadMapName}>1. {roadmap[0]}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress = {() =>{
-                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[1], roadmap : roadmap[1], userId : userId, ip : ip})
-                  }}>
-                      <Text style = {styles.roadMapName}>2. {roadmap[1]}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress = {() =>{
-                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[2], roadmap : roadmap[2], userId : userId, ip : ip})
-                  }}>
-                      <Text style = {styles.roadMapName}>3. {roadmap[2]}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress = {() =>{
-                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[3], roadmap : roadmap[3], userId : userId, ip : ip})
-                  }}>
-                      <Text style = {styles.roadMapName}>4. {roadmap[3]}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress = {() =>{
-                    props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[4], roadmap : roadmap[4], userId : userId, ip : ip})
-                  }}>
-                      <Text style = {styles.roadMapName}>5. {roadmap[4]}</Text>
-                    </TouchableOpacity>
+                    {roadMapList}
                   </View>
           </View>
 

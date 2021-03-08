@@ -7,19 +7,18 @@ import axios from 'axios';
 
 const SignUp = ({ip,navigation}) => {
 
+  const [inputUserName, setInputUserName] = useState([""]);
   const [inputId, setInputId] = useState([""]);
   const [inputPw, setInputPw] = useState([""]);
   const [inputPwCk, setInputPwCk] = useState([""]);
   const [inputEmail, setInputEmail] = useState([""]);
+  const [inputUserPhone, setInputUserPhone] = useState([""]);
+  const [inputUserAge, setInputUserAge] = useState([""]);
 
-  const[userId, setUserId] = useState([""]);
-  const[userPw, setUserPw] = useState([""]);
-  const[userPwCk, setUserPwCk] = useState([""]);
-  const[userEmail, setUserEmail] = useState([""]);
-
-  const [Major, setMajor] = useState("");
-
-  const [Work, setWork] = useState([""])
+  const [userArea, setUserArea] = useState([""]);
+  const [userInterest, setUserInterest] = useState("");
+  const [userJob, setUserJob] = useState([""]);
+  const [userSex, setUserSex] = useState([""]);
 
   const writeState = () =>{
     // console.log(inputId, inputPw, inputPwCk, inputEmail, Major[0], Work);
@@ -32,10 +31,22 @@ const SignUp = ({ip,navigation}) => {
     else if(inputPwCk == ""){
       alert("비밀번호 확인을 입력해 주세요");
     }
-    else if(inputPw == ""){
+    else if(inputEmail == ""){
       alert("이메일을 입력해 주세요");
     }
-    else if(Major == "" || Work == ""){
+    else if (inputUserAge == ""){
+      alert("나이를 입력해 주세요");
+    }
+    else if (inputUserPhone == ""){
+      alert("휴대폰번호를 입력해 주세요");
+    }
+    else if (userArea == ""){
+      alert("지역을 선택해 주세요");
+    }
+    else if (userSex==""){
+      alelrt("성별을 선택해 주세요")
+    }
+    else if(userJob == "" || userInterest == ""){
       alert("추가정보를 입력해 주세요");
     }
     else if(inputPw != inputPwCk){
@@ -48,13 +59,18 @@ const SignUp = ({ip,navigation}) => {
 //http://localhost:8000/register?userId=a&userPw=a&userEmail=a&work=a
   async function register(){
     try{
-      const response = await axios.get("http://"+ip+":8000/register",{
+      const response = await axios.get("http://"+ip+"/register",{
         params : {
+          userName : inputUserName,
           userId : inputId,
           userPw : inputPw,
+          userAge : inputUserAge,
+          userArea : userArea,
+          userJob : userJob,
+          userInterest : userInterest,
           userEmail : inputEmail,
-          userWork : Work,
-          major : Major.join(",")
+          userPhone : inputUserPhone,
+          userSex : userSex
         }
       });
       
@@ -94,15 +110,18 @@ const SignUp = ({ip,navigation}) => {
                     <View style={styles.formArea}>
                         <TextInput 
                           style={styles.textForm} 
+                          placeholder={"이름 입력"}
+                          onChangeText = {
+                            (inputUserName) => setInputUserName(inputUserName)
+                          }/>
+                    </View>
+                    <View style={styles.formArea}>
+                        <TextInput 
+                          style={styles.textForm} 
                           placeholder={"아이디 입력"}
                           onChangeText = {
                             (inputId) => setInputId(inputId)
                           }/>
-                        {/* <TouchableOpacity style = {styles.checkButton}>
-                          <Text style = {styles.checkButtonTitle}>
-                            중복 확인
-                          </Text>
-                        </TouchableOpacity> */}
                     </View>
                     <View style={styles.formArea}>
                         <TextInput 
@@ -123,15 +142,81 @@ const SignUp = ({ip,navigation}) => {
                     <View style={styles.formArea}>
                         <TextInput 
                           style={styles.textForm} 
-                          placeholder={"이메일 입력"}
+                          placeholder={"이메일 입력 ( ex@example.com )"}
                           onChangeText = {
                             (inputEmail) => setInputEmail(inputEmail)
                           }/>
-                        {/* <TouchableOpacity style = {styles.checkButton}>
-                          <Text style = {styles.checkButtonTitle}>
-                            중복 확인
+                    </View>
+                    <View style={styles.formArea}>
+                        <TextInput 
+                          style={styles.textForm} 
+                          placeholder={"전화번호 입력 ( 010-1234-5678 )"}
+                          onChangeText = {
+                            (inputUserPhone) => setInputUserPhone(inputUserPhone)
+                          }/>
+                    </View>
+                    <View style={styles.formArea}>
+                        <TextInput 
+                          style={styles.textForm} 
+                          placeholder={"나이 입력"}
+                          onChangeText = {
+                            (inputUserAge) => setInputUserAge(inputUserAge)
+                          }/>
+                    </View>
+                    <View style = {{padding : 10,flexDirection:'row', justifyContent : 'left', alignItems : 'center'}}>
+
+                          <Text style = {{fontSize : 20, fontWeight : 'bold'}}>
+                            지역 : 
                           </Text>
-                        </TouchableOpacity> */}
+
+                      <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
+                        items = {[
+                          {label : "강원도", value : '강원도'},
+                          {label : "경기도", value : '경기도'},
+                          {label : "충청북도", value : '충청북도'},
+                          {label : "충청남도", value : '충청남도'},
+                          {label : "경상북도", value : '경상북도'},
+                          {label : "경상남도", value : '경상남도'},
+                          {label : "전라북도", value : '전라북도'},
+                          {label : "전라남도", value : '전라남도'},
+                          {label : "제주도", value : '제주도'},
+                        ]}
+
+                        containerStyle = {{height : 50, padding : 5}}
+                        itemStyle ={{
+                          justifyContent : 'flex-start',
+                          position : 'relative'
+                        }}
+                        onChangeItem = {(item) => {
+                          setUserArea(item.value);
+                        }
+                        }
+                        >
+                      </DropDownPicker>
+                    </View>
+                    <View style = {{padding : 10,flexDirection:'row', justifyContent : 'left', alignItems : 'center'}}>
+
+                    <Text style = {{fontSize : 20, fontWeight : 'bold'}}>
+                      성별 : 
+                    </Text>
+
+                    <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
+                    items = {[
+                    {label : "남자", value : '남'},
+                    {label : "여자", value : '여'},
+                    ]}
+
+                    containerStyle = {{height : 50, padding : 5}}
+                    itemStyle ={{
+                    justifyContent : 'flex-start',
+                    position : 'relative'
+                    }}
+                    onChangeItem = {(item) => {
+                    setUserSex(item.value);
+                    }
+                    }
+                    >
+                    </DropDownPicker>
                     </View>
             </View>
 
@@ -139,8 +224,13 @@ const SignUp = ({ip,navigation}) => {
               <Text style = {styles.subTitle}>추가 정보</Text>
             </View>
 
-            <View style = {{flex : 1, justifyContent : 'center', flexDirection : 'row'}}>
+            <View style = {{flex : 1, justifyContent : 'left', alignItems : 'center'}}>
+              <View style = {{padding : 10,flexDirection:'row', justifyContent : 'left', alignItems : 'center'}}>
 
+                  <Text style = {{fontSize : 20, fontWeight : 'bold'}}>
+                    직업 : 
+                  </Text>
+              
               <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
                 items = {[
                   {label : "사업가", value : 'ceo'},
@@ -156,12 +246,17 @@ const SignUp = ({ip,navigation}) => {
                   justifyContent : 'flex-start'
                 }}
                 onChangeItem = {item => {
-                  setWork(item.value);
+                  setUserJob(item.value);
                   }
                 }
                 >
               </DropDownPicker>
+              </View>
+              <View style = {{padding : 10,flexDirection:'row', justifyContent : 'left', alignItems : 'center'}}>
 
+                <Text style = {{fontSize : 20, fontWeight : 'bold'}}>
+                  관심 : 
+                </Text>
               <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
                 items = {[
                   {label : "웹", value : 'web'},
@@ -174,21 +269,17 @@ const SignUp = ({ip,navigation}) => {
                   {label : "기획", value : 'planner'},
                 ]}
 
-                multiple = {true}
-                min = {0}
-                max = {10} 
-
-                defaultValue = {Major}
                 containerStyle = {{height : 50, padding : 5}}
                 itemStyle ={{
                   justifyContent : 'flex-start'
                 }}
                 onChangeItem = {(item) => {
-                  setMajor(item);
+                  setUserInterest(item.value);
                 }
                 }
                 >
               </DropDownPicker>
+            </View>
             </View>
 
             <View style = {styles.buttonArea}>
@@ -219,6 +310,7 @@ const SignUp = ({ip,navigation}) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    height : '100%',
     flex: 1,
     flexDirection: 'column', // row
     backgroundColor: 'white',
@@ -239,7 +331,8 @@ const styles = StyleSheet.create({
       width : 'auto',
       height : 'auto',
       justifyContent : 'center',
-      alignItems : 'center'
+      alignItems : 'center',
+      // paddingTop : 100
     },
     subTitle : {
       fontSize : 20,
@@ -286,7 +379,8 @@ textForm: {
     width: '100%',
     height: hp('5%'),
     flexDirection : 'row',
-    marginTop : 130
+    marginTop : 130,
+    marginBottom : 50
   },
   button: {
     backgroundColor: "skyblue",

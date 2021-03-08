@@ -50,7 +50,7 @@ const RoadMapSocial = (props, {navigation}) => {
       setDate(newDateArray);
       
       setInputText("");
-      
+      scrollRef.current.scrollToEnd({animated : true});
     }
 
   }
@@ -88,9 +88,10 @@ const RoadMapSocial = (props, {navigation}) => {
         <KeyboardAvoidingView keyboardVerticalOffset = {100} behavior = {Platform.OS == 'ios' ? 'padding' : 'height'}  style ={styles.container}>
 
         <SafeAreaView>
-          <ScrollView ref={scrollRef} onContentSizeChange = {() =>{
+        {/* <ScrollView ref={scrollRef} onContentSizeChange = {() =>{
             scrollRef.current.scrollToEnd({animated : true})
-          }}>
+          }}> */}
+          <ScrollView ref={scrollRef}>
             {/* 최상단 부분 */}
             <View style = {styles.topArea}>
               {/* 정보 상단 */}
