@@ -1,13 +1,66 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, ScrollView, TouchableOpacity, View, TextInput, KeyboardAvoidingView} from "react-native";
+import {StyleSheet, Text, ScrollView, TouchableOpacity, View, TextInput} from "react-native";
 import {StackActions} from "@react-navigation/native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+import { CheckBox } from 'react-native-elements';
 
-const LoginPage = ({navigation, ip}) => {
+
+const LoginPage = ({navigation}) => {
 
     const [inputId, setInputId] = useState([""]);
     const [inputPw, setInputPw] = useState([""]);
+
+    const [ip, setIp] = useState();
+    const [autoLogin, setAutoLogin] = useState();
+    const [userId, setUserId] = useState();
+    const [userPw, setUserPw] = useState();
+
+    AsyncStorage.getItem("ip").then((value) =>{
+      setIp(value);
+    });
+
+    AsyncStorage.getItem("userId").then((value) =>{
+      if(value == null){
+
+      }
+      else{
+        setInputId(value);
+      }
+    });
+    AsyncStorage.getItem("userPw").then((value) =>{
+      if(value == null){
+
+      }
+      else{
+        setInputId(value);
+      }
+    });
+
+
+    AsyncStorage.getItem("autoLogin").then((value) => {
+      
+      if(value == "false"){
+        setAutoLogin(false);
+        console.log("받아올떄false " + autoLogin);
+      }
+      else if(value == "true"){
+        setAutoLogin(true);
+        console.log("받아올떄true " + autoLogin);
+      }
+    })
+
+    const checkAutoLogin = () =>{
+      if(autoLogin == false){
+        setAutoLogin(true);
+        AsyncStorage.setItem("autoLogin","true");
+      }
+      else if (autoLogin == true){
+        setAutoLogin(false);
+        AsyncStorage.setItem("autoLogin", "false");
+      }
+    }
 
     const checkInfo = () =>{
         if(inputId == ""){
@@ -33,6 +86,7 @@ const LoginPage = ({navigation, ip}) => {
           let result = response.data
           
           if (result == "success") {
+
             navigation.dispatch(
                 StackActions.replace('main', {userId : inputId})
             );
@@ -71,6 +125,19 @@ const LoginPage = ({navigation, ip}) => {
                 </View>
 
                 <View style={styles.buttonArea}>
+
+                    <View>
+                      <CheckBox
+                      center
+                      title = "자동 로그인"
+                      containerStyle = {{height : "100%"}}
+                      checked = {autoLogin}
+                      onPress = {checkAutoLogin}
+                      >
+
+                      </CheckBox>
+                    </View>
+
                     <TouchableOpacity 
                         style={styles.button}
                         onPress={checkInfo}>

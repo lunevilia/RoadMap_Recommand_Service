@@ -2,6 +2,7 @@ import React, {Component, useState} from 'react';
 import {StackActions} from "@react-navigation/native";
 import {Modal,View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button} from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const MyPage = (props, {navigation}) => {
 
@@ -72,10 +73,12 @@ const MyPage = (props, {navigation}) => {
                 checkout();
                 props.navigation.dispatch(
                   StackActions.replace('login'));
+                  AsyncStorage.setItem("autoLogin", "false");
               }
               else if (head == "로그아웃"){
                 props.navigation.dispatch(
                   StackActions.replace('login'));
+                  AsyncStorage.setItem("autoLogin", "false");
               }
             }}>
             <Text style={styles.actionText}>Yes</Text>

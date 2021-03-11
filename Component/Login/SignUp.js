@@ -4,8 +4,9 @@ import {StyleSheet, Text, ScrollView, TouchableOpacity, View, TextInput, SafeAre
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const SignUp = ({ip,navigation}) => {
+const SignUp = ({navigation}) => {
 
   const [inputUserName, setInputUserName] = useState([""]);
   const [inputId, setInputId] = useState([""]);
@@ -19,6 +20,12 @@ const SignUp = ({ip,navigation}) => {
   const [userInterest, setUserInterest] = useState("");
   const [userJob, setUserJob] = useState([""]);
   const [userSex, setUserSex] = useState([""]);
+
+// App.js ip 받아오기
+  const [ip, setIp] = useState();
+  AsyncStorage.getItem("ip").then((value) =>{
+    setIp(value);
+  });
 
   const writeState = () =>{
     // console.log(inputId, inputPw, inputPwCk, inputEmail, Major[0], Work);
@@ -173,13 +180,14 @@ const SignUp = ({ip,navigation}) => {
                         items = {[
                           {label : "강원도", value : '강원도'},
                           {label : "경기도", value : '경기도'},
+                          {label : "서울특별시", value : '서울특별시'},
                           {label : "충청북도", value : '충청북도'},
                           {label : "충청남도", value : '충청남도'},
                           {label : "경상북도", value : '경상북도'},
                           {label : "경상남도", value : '경상남도'},
                           {label : "전라북도", value : '전라북도'},
                           {label : "전라남도", value : '전라남도'},
-                          {label : "제주도", value : '제주도'},
+                          {label : "제주특별자치도", value : '제주특별자치도'},
                         ]}
 
                         containerStyle = {{height : 50, padding : 5}}
@@ -233,12 +241,41 @@ const SignUp = ({ip,navigation}) => {
               
               <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
                 items = {[
-                  {label : "사업가", value : 'ceo'},
-                  {label : "초등학생", value : 'elementary'},
-                  {label : "중학생", value : 'middle'},
-                  {label : "고등학생", value : 'high'},
-                  {label : "대학생", value : 'college'},
-                  {label : "취업준비생", value : 'readyworker'},
+                  {label : "DBA", value : 'DBA'},
+                  {label : "High-Level 개발자", value : 'High-Level 개발자'},
+                  {label : "Low-Level 개발자", value : 'Low-Level 개발자'},
+                  {label : "게임 개발자", value : '게임 개발자'},
+                  {label : "그래픽 개발자", value : '그래픽 개발자'},
+                  {label : "네트워크 관리자", value : '네트워크 관리자'},
+                  {label : "대학생", value : '대학생'},
+                  {label : "데브옵스개발자", value : '데브옵스개발자'},
+                  {label : "데스크톱개발자", value : '데스크톱개발자'},
+                  {label : "데이터 사이언티스트", value : '데이터 사이언티스트'},
+                  {label : "데이터베이스 관리자", value : '데이터베이스 관리자'},
+                  {label : "디지털포렌식 전문가", value : '디지털포렌식 전문가'},
+                  {label : "머신러닝 엔지니어", value : '머신러닝 엔지니어'},
+                  {label : "모의해킹 전문가", value : '모의해킹 전문가'},
+                  {label : "미들티어 개발자", value : '미들티어 개발자'},
+                  {label : "보안솔루션개발자", value : '보안솔루션개발자'},
+                  {label : "보안컨설턴트", value : '보안컨설턴트'},
+                  {label : "빅 데이터 개발자", value : '빅 데이터 개발자'},
+                  {label : "서버 개발자", value : '서버 개발자'},
+                  {label : "소프트웨어 테스트 엔지니어", value : '소프트웨어 테스트 엔지니어'},
+                  {label : "시스템 관리자", value : '시스템 관리자'},
+                  {label : "시스템소프트웨어개발자", value : '시스템소프트웨어개발자'},
+                  {label : "악성코드분석전문가", value : '악성코드분석전문가'},
+                  {label : "앱개발자", value : '앱개발자'},
+                  {label : "워드프레스 개발자", value : '워드프레스 개발자'},
+                  {label : "웹 퍼블리셔", value : '웹 퍼블리셔'},
+                  {label : "웹 프로그래머", value : '웹 프로그래머'},
+                  {label : "응용소프트웨어개발자", value : '응용소프트웨어개발자'},
+                  {label : "임베디드 소프트웨어 개발자", value : '임베디드 소프트웨어 개발자'},
+                  {label : "정보보안가", value : '정보보안가'},
+                  {label : "정보시스템감리사", value : '정보시스템감리사'},
+                  {label : "컴퓨터보안전문가", value : '컴퓨터보안전문가'},
+                  {label : "클라이언트개발자", value : '클라이언트개발자'},
+                  {label : "풀 스택 개발자", value : '풀 스택 개발자'},
+                  {label : "해커", value : '해커'},
                 ]}
 
                 containerStyle = {{height : 50, padding : 5}}
@@ -259,14 +296,19 @@ const SignUp = ({ip,navigation}) => {
                 </Text>
               <DropDownPicker style = {{flex : 1, width : 150, padding : 10}}
                 items = {[
-                  {label : "웹", value : 'web'},
-                  {label : "앱", value : 'app'},
-                  {label : "인공지능", value : 'ai'},
-                  {label : "블록체인", value : 'blockchain'},
-                  {label : "보안", value : 'protect'},
-                  {label : "빅데이터", value : 'bigdata'},
-                  {label : "디자이너", value : 'designer'},
-                  {label : "기획", value : 'planner'},
+                  {label : "웹개발", value : '웹개발'},
+                  {label : "앱개발", value : '앱개발'},
+                  {label : "머신러닝", value : '머신러닝'},
+                  {label : "게임", value : '게임'},
+                  {label : "네트워크개발", value : '네트워크개발'},
+                  {label : "빅데이터", value : '빅데이터'},
+                  {label : "데브옵스", value : '데브옵스'},
+                  {label : "데이터베이스", value : '데이터베이스'},
+                  {label : "디자인", value : '디자인'},
+                  {label : "딥러닝", value : '딥러닝'},
+                  {label : "서버개발", value : '서버개발'},
+                  {label : "임베디드", value : '임베디드'},
+                  {label : "정보보안", value : '정보보안'},
                 ]}
 
                 containerStyle = {{height : 50, padding : 5}}

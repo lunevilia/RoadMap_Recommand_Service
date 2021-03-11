@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import {StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const MainPage = (props,{navigation}) => {
 
   const userId = props.userId;
-  const ip = "193.123.247.150:8080";
   const api = "KakaoAK aef53ecb905e1cbffcf4b411286c0ca0";
   
+  // App.js ip 받아오기
+  const [ip,setIp] = useState();
+  AsyncStorage.getItem("ip").then((value) => {
+    setIp(value);
+  });
+
   // const userId = props.route.params.userId;
   const [bookName, setBookName] = useState(["책 이게 뭐라고", "C 프로그래밍", "표백", "책 한번 써봅시다", "알바생 자르기", "호빗"]);
   const [bookSrc, setBookSrc] = useState(["-","-","-","-","-","-"]);
@@ -94,7 +100,9 @@ const MainPage = (props,{navigation}) => {
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style = {styles.mindMapArea}>
+              <TouchableOpacity style = {styles.mindMapArea} onPress = {() =>{
+                    props.navigation.navigate("MyPage", {userId : userId, ip : ip})
+                  }}>
                 <Image style = {styles.mindMapImage} source = {require('../img/loadmap_illustrate_fix.png')}></Image>
               </TouchableOpacity>
             </View>
@@ -104,7 +112,7 @@ const MainPage = (props,{navigation}) => {
           {/* 인기 책순위  */}
           <View style = {styles.rankArea} >
 
-            <Text style = {styles.rankName} onPress = {getBookInfo}>인기 책 순위</Text>
+            <Text style = {styles.rankName}>인기 책 순위</Text>
 
             <ScrollView horizontal = {true}>
                 {bookList}
