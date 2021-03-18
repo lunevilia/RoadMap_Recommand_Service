@@ -16,21 +16,52 @@ const MainPage = (props,{navigation}) => {
   });
 
   // const userId = props.route.params.userId;
-  const [bookName, setBookName] = useState(["책 이게 뭐라고", "C 프로그래밍", "표백", "책 한번 써봅시다", "알바생 자르기", "호빗"]);
+  var [bookName, setBookName] = useState(["-", "-", "-", "-", "-", "-"]);
   const [bookSrc, setBookSrc] = useState(["-","-","-","-","-","-"]);
   const [bookUrl, setBookUrl] = useState(["-","-","-","-","-","-"]);
-  const [roadmap, setRoadMap] = useState(["웹 개발자 로드맵", "이거면 하나면 나도 보안 전문가!", "인공지능학개론", "분산 처리의 정석", "나만의 비밀노트"])
-  const [roadMapId, setRoadMapId] = useState(["0", "1", "2", "3", "4"])
+  const [roadmap, setRoadMap] = useState(["-","-","-","-","-"])
+  const [roadMapId, setRoadMapId] = useState(["-","-","-","-","-"])
 
   const [getbook, setGetBook] = useState(["0"]);
+  const [getrank, setGetRank] = useState(["0"]);
 
   if(getbook == "0"){
-    getBookInfo();
-    setGetBook("1")
+    if (ip != null){
+      getTopBook();
+      setGetBook("1");
+    }
   }
 
+  if(getrank == "0"){
+    if(ip != null){
+      getTopRoadmap();
+      setGetRank("1");
+    }
+  }
+
+  //책 순위 가져오기
+  async function getTopBook(){
+    try{
+      var newBookNameArray = [...bookName];
+
+      // const response = await axios.get("http://"+ip+":8081/gettopbook");
+      const response = await axios.get("http://"+ip+":8081/gettopbook");
+
+      for (var i = 0; i<bookName.length; i++){
+        newBookNameArray[i] = response.data[i].BNAME;
+      }
+
+      setBookName(newBookNameArray);
+      console.log("book success");
+      getBookInfo(newBookNameArray);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  //카카오 api 책정보
   // https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book
-  async function getBookInfo(){
+  async function getBookInfo(bookarray){
     var newSrcArray = [...bookSrc];
     var newUrlArray = [...bookUrl];
   
@@ -41,7 +72,7 @@ const MainPage = (props,{navigation}) => {
             sort : 'accuracy',
             page : 1,
             size : 1,
-            query : bookName[i]
+            query : bookarray[i]
           },
           headers: {
             Authorization: api
@@ -62,11 +93,34 @@ const MainPage = (props,{navigation}) => {
     console.log("success");
   }
 
+  //로드맵 순위 가져오기
+  async function getTopRoadmap(){
+    try{
+      var newRoadmapArray = [...roadmap];
+      var newRoadmapIdArray = [...roadMapId];
+
+      const response = await axios.get("http://"+ip+":8081/gettoprank");
+
+      for(var i = 0; i<5; i++){
+        newRoadmapArray[i] = response.data[i].RNAME;
+        newRoadmapIdArray[i] = response.data[i].RID;
+      }
+
+      setRoadMap(newRoadmapArray);
+      setRoadMapId(newRoadmapIdArray);
+
+      console.log("roadmap success");
+    } catch(error){
+      console.error(error);
+    }
+  }
+
   //책 목록 컴포넌트화
   const bookList = bookSrc.map((bookSrc, index) => 
     (              
       <TouchableOpacity key = {index} style = {styles.imageArea} onPress ={() =>{
-        Linking.openURL(bookUrl[index])
+        //Linking.openURL(bookUrl[index])
+        props.navigation.navigate("bookinfo", {bookUrl : bookUrl[index]});
       }}>
         <Image style = {styles.image} source = {{uri : bookSrc}}></Image> 
         <Text style = {styles.imageName}>{bookName[index]}</Text>
