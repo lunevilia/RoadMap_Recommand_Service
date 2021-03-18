@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <!-- 쿼리문 작성 -->
+    
+<mapper namespace="com.roadmap.board.dao.UserMapper">
+	<!-- 회원가입 진행 -->
+	<select id="getComment" parameterType="string" resultType = "hashMap">
+        SELECT UID, UCOMMENT, UDATE FROM USERCOMMENT WHERE RID = #{rid}
+    </select>
+    
+    <insert id="insertComment" parameterType="commentDto">
+    	INSERT INTO USERCOMMENT(RID, UID, UCOMMENT, UDATE) values (#{rid}, #{uid}, #{ucomment}, #{udate}) 
+    </insert>
+    
+    <delete id="deleteComment" parameterType = "commentDto">
+    	DELETE FROM USERCOMMENT WHERE UID=(#{uid}) and UDATE = (#{udate})
+    </delete>
+</mapper>
