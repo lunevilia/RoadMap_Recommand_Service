@@ -16,7 +16,7 @@ const MyPage = (props, {navigation}) => {
 
     async function checkout(){
       try{
-        const response = await axios.get("http://"+ip+"/checkout",{
+        const response = await axios.get("http://"+ip+":8080/checkout",{
           params : {
             userId : userId,
           }
@@ -29,7 +29,7 @@ const MyPage = (props, {navigation}) => {
 
     (async function getEmail(){
       try{
-        const response = await axios.get("http://"+ip+"/getemail",{
+        const response = await axios.get("http://"+ip+":8080/getemail",{
           params : {
             userId : userId,
           }
@@ -124,9 +124,6 @@ const MyPage = (props, {navigation}) => {
         </View>
 
         <View style = {styles.block_2}>
-          <TouchableOpacity>
-            <Text style = {styles.smalltxt}>북마크</Text>
-          </TouchableOpacity>
           <TouchableOpacity>
             <Text style = {styles.smalltxt}>내 로드맵</Text>
           </TouchableOpacity>
