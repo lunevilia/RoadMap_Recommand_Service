@@ -76,7 +76,7 @@ const LoginPage = ({navigation}) => {
 
     async function login(){
         try{
-          const response = await axios.get("http://"+ip+"/login",{
+          const response = await axios.get("http://"+ip+":8080/login",{
             params : {
               userId : inputId,
               userPw : inputPw,
