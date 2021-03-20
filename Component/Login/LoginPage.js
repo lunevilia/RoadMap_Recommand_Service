@@ -10,6 +10,10 @@ const LoginPage = ({navigation, ip}) => {
     const [inputPw, setInputPw] = useState([""]);
 
     const checkInfo = () =>{
+        navigation.dispatch(
+            StackActions.replace('main', {userId : inputId})
+        );//임시 강제 로그인
+        
         if(inputId == ""){
             alert("아이디를 입력해주세요.");
         }
@@ -46,6 +50,10 @@ const LoginPage = ({navigation, ip}) => {
     
         }catch(error) {
           console.error(error);
+
+          navigation.dispatch(
+            StackActions.replace('main', {userId : inputId})
+        );//임시 강제 로그인
         }
       }
 

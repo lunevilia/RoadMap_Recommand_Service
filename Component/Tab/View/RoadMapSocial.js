@@ -105,7 +105,7 @@ const RoadMapSocial = (props, {navigation}) => {
                           <Icon name='ellipsis-vertical'size={30} color="black"></Icon>
                         </MenuTrigger>
                         <MenuOptions>
-                          <MenuOption onSelect={() => alert('save')} text='수정'></MenuOption>
+                          <MenuOption onSelect={() => alert('save') } text='수정'></MenuOption>
                           <MenuOption onSelect={() => alert('delete')} text='삭제'></MenuOption>
                         </MenuOptions>
                       </Menu>

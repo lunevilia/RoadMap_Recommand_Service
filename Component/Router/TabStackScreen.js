@@ -17,6 +17,7 @@ import MyPage from "../Tab/View/MyPage";
 import RoadMapSocial from "../Tab/View/RoadMapSocial";
 import RoadMap from "../Tab/View/RoadMap";
 import commentList from "../Tab/View/CommentList";
+import ModifyRoadMap from "../Tab/View/ModifyRoadMap";
 
 const TabStack = createBottomTabNavigator();
 const SignUpStack = createStackNavigator();
@@ -35,6 +36,7 @@ const MainStackScreen = ({userId, ip}) => {
             <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
             <MainStack.Screen name = "RoadMap" component = {RoadMap}/>
             <MainStack.Screen name = "commentList" component = {commentList}/>
+            <MainStack.Screen name = "ModifyRoadMap" component = {ModifyRoadMap}/>
         </MainStack.Navigator>
     );
 }
