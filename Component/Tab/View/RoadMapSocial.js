@@ -21,13 +21,11 @@ const RoadMapSocial = (props, {navigation}) => {
   let roadmap = props.route.params.roadmap;
   let userId = props.route.params.userId;
 
-  console.log(roadMapId);
-
-  let [info, setInfo] = useState(["생생하며 그들의 눈에 무엇이 타오르고 있는가? 우리 눈이 그것을 보는 때에 우리의 귀는 생의 찬미를 듣는다. 그것은 웅대한 관현악이며 미묘한 교"]);
+  let [info, setInfo] = useState([]);
   let [user, setUser] = useState([]);
   let [userComment, setUserComment] = useState([]);
   let [date, setDate] = useState([]);
-  let [like, setLike] = useState(["♡",37]);
+  let [like, setLike] = useState(["",0]);
 
   let [moddifyindex, setModifyIndex] = useState([]);
 
@@ -40,7 +38,67 @@ const RoadMapSocial = (props, {navigation}) => {
   if(getdata == "0"){
     if(ip != null){
       getComment();
+      getRoadmapInfo();
+      getLikeInfo();
       setGetData("1");
+    }
+  }
+
+  //로드맵 정보 받아오기
+  async function getRoadmapInfo(){
+    try{
+
+      var newRoadmapInfo = [...info];
+
+      const response = await axios.get("http://"+ip+":8083/getroadmapinfo",{
+        params : {
+          rid : roadMapId
+        }
+      });
+
+      setInfo(response.data[0].RINFO);
+
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  //로드맵 좋아요 갯수 받아오기
+  async function getLikeInfo(){
+    try {
+      
+      var newLikeArray = [...like];
+
+      const response = await axios.get("http://"+ip+":8082/getlovecount",{
+        params : {
+          rid : roadMapId
+        }
+      });
+
+      newLikeArray[1] = response.data;
+      getLikeStatus(newLikeArray)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //로드맵 좋아요 상태 받아오기
+  async function getLikeStatus(newLikeArray){
+    try {
+      
+      const response = await axios.get("http://"+ip+":8082/getlovestatus",{
+        params : {
+          rid : roadMapId,
+          uid : userId
+        }
+      });
+
+      newLikeArray[0] = response.data;
+      setLike(newLikeArray);
+
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -134,8 +192,7 @@ const RoadMapSocial = (props, {navigation}) => {
       var newDateArray = [...date];
   
       var currentTime = new Date();
-  
-      // var time = currentTime.getFullYear() + "-" + currentTime.getMonth() + "-" + currentTime.getDay() + " " + currentTime.getHours() + ":" + currentTime.getMinutes();
+
       var time = currentTime.toLocaleString();
       newCommentArray.push(inputText);
       newUserArray.push(userId);
@@ -150,6 +207,38 @@ const RoadMapSocial = (props, {navigation}) => {
       scrollRef.current.scrollToEnd({animated : true});
     }
 
+  }
+
+  //좋아요 등록
+  async function saveLove(){
+    try {
+
+      const response = await axios.get("http://"+ip+":8082/savelove",{
+        params : {
+          rid : roadMapId,
+          uid : userId
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //좋아요 삭제
+  async function deleteLove(){
+    try{
+
+      const response = await axios.get("http://"+ip+":8082/deletelove",{
+        params: {
+          rid : roadMapId,
+          uid : userId
+        }
+      });
+
+      console.log(response.data);
+    }catch(error){
+      console.log(error);
+    }
   }
 
   const modalHeader=(
@@ -214,12 +303,16 @@ const RoadMapSocial = (props, {navigation}) => {
     if (newLikeArray[0].trim()==("♡")){
       newLikeArray[0] = "♥";
       newLikeArray[1] += 1; 
+      setLike(newLikeArray);
+      saveLove();
     }
     else {
       newLikeArray[0] = "♡";
       newLikeArray[1] -= 1;
+      setLike(newLikeArray);
+      deleteLove();
     }
-    setLike(newLikeArray);
+    
   }
 
   const commentlist = user.map((user, index) => 
