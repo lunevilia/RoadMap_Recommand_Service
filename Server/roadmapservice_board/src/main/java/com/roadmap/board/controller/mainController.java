@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.roadmap.board.dao.UserMapper;
+import com.roadmap.board.dto.BoardDto;
 import com.roadmap.board.dto.CommentDto;
 
 @RestController
@@ -17,11 +18,6 @@ public class mainController {
 	
 	@Autowired
 	private UserMapper uMapper;
-	
-	@GetMapping(path = "/test")
-	public String test() {
-		return "success";
-	}
 	
 	@GetMapping(path = "/getcomment")
 	public List<CommentDto> getComment(@RequestParam String rid) {
@@ -57,6 +53,83 @@ public class mainController {
 			commentDto.setUid(uid);
 			commentDto.setDate(udate);
 			uMapper.deleteComment(commentDto);
+			result = "success";
+			
+		}catch(Exception e) {
+			result = "fail";
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(path = "/getlovecount")
+	public String getLoveCount(@RequestParam String rid) {
+		
+		try {
+			
+			result =  uMapper.getLoveCount(Integer.parseInt(rid));
+			System.out.println(result);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@GetMapping(path = "/getlovestatus")
+	public String getLoveStatus(@RequestParam String rid, String uid) {
+		
+		try {
+			
+			BoardDto boardDto = new BoardDto();
+			boardDto.setRid(rid);
+			boardDto.setUid(uMapper.getUid(uid));
+			
+			if(uMapper.getLoveStatus(boardDto) != null) {
+				result = "♥";
+			}
+			else result = "♡";
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(path = "/savelove")
+	public String saveLove(@RequestParam String rid, String uid) {
+		
+		try {
+			
+			BoardDto boardDto = new BoardDto();
+			boardDto.setRid(rid);
+			boardDto.setUid(uMapper.getUid(uid));
+			
+			uMapper.saveLove(boardDto);
+			
+			result = "success";
+			
+		}catch(Exception e) {
+			result = "fail";
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(path = "/deletelove")
+	public String deleteLove(@RequestParam String rid, String uid){
+		
+		try {
+			
+			BoardDto boardDto = new BoardDto();
+			boardDto.setRid(rid);
+			boardDto.setUid(uMapper.getUid(uid));
+			
+			uMapper.deleteLove(boardDto);
+			
 			result = "success";
 			
 		}catch(Exception e) {

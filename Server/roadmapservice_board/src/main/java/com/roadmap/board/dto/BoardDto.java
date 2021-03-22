@@ -2,25 +2,53 @@ package com.roadmap.board.dto;
 
 public class BoardDto {
 	
-	private int bid;
-	private int bindex;
+	private String bid;
+	private String bindex;
 	private String btext;
 	private String bdate;
-	private int blike;
+	private String blike;
 	
-	public void setBid(int bid) {
+	private String rlike;
+	private String rid;
+	private String uid;
+	
+	public void setRid(String rid) {
+		this.rid = rid;
+	}
+	
+	public String getRid() {
+		return rid;
+	}
+	
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+	
+	public String getUid() {
+		return uid;
+	}
+	
+	public void setRlike(String rlike) {
+		this.rlike = rlike;
+	}
+	
+	public String getRlike() {
+		return rlike;
+	}
+	
+	public void setBid(String bid) {
 		this.bid = bid;
 	}
 	
-	public int getBid() {
+	public String getBid() {
 		return bid;
 	}
 	
-	public void setBindex(int bindex) {
+	public void setBindex(String bindex) {
 		this.bindex = bindex;
 	}
 	
-	public int getBindex() {
+	public String getBindex() {
 		return bindex;
 	}
 	
@@ -40,11 +68,11 @@ public class BoardDto {
 		return bdate;
 	}
 	
-	public void setBlike(int blike) {
+	public void setBlike(String blike) {
 		this.blike = blike;
 	}
 	
-	public int getBlike() {
+	public String getBlike() {
 		return blike;
 	}
 }

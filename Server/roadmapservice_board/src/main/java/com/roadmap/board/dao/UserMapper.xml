@@ -6,7 +6,7 @@
     <!-- 쿼리문 작성 -->
     
 <mapper namespace="com.roadmap.board.dao.UserMapper">
-	<!-- 회원가입 진행 -->
+	
 	<select id="getComment" parameterType="string" resultType = "hashMap">
         SELECT UID, UCOMMENT, UDATE FROM USERCOMMENT WHERE RID = #{rid}
     </select>
@@ -18,4 +18,24 @@
     <delete id="deleteComment" parameterType = "commentDto">
     	DELETE FROM USERCOMMENT WHERE UID=(#{uid}) and UDATE = (#{udate})
     </delete>
+    
+    <select id = "getLoveCount" parameterType = "int" resultType = "String">
+    	SELECT COUNT(RID) FROM ROADMAPLOVE WHERE RID = #{rid}
+    </select>
+    
+    <select id = "getLoveStatus" parameterType = "boardDto" resultType = "String">
+    	SELECT DISTINCT(RID) FROM ROADMAPLOVE WHERE UID = #{uid} and RID = #{rid}
+    </select>
+    
+    <insert id = "saveLove" parameterType = "boardDto">
+    	INSERT INTO ROADMAPLOVE(RID, UID) VALUES (#{rid}, #{uid})
+    </insert>
+    
+    <delete id = "deleteLove" parameterType = "boardDto">
+    	DELETE FROM ROADMAPLOVE WHERE UID = #{uid} and RID = #{rid}
+    </delete>
+    
+    <select id = "getUid" parameterType = "String" resultType = "String">
+    	SELECT UID FROM USERINFO WHERE USERID = #{uid}
+    </select>
 </mapper>
