@@ -11,7 +11,7 @@ const ModifyRoadMap = (props, {navigation}) => {
     let roadMapId = props.route.params.roadMapId;
     let roadmap = props.route.params.roadmap;
 
-    const state = {
+    const [state, setstate] = {
       data: [
         {
           id: 'root',

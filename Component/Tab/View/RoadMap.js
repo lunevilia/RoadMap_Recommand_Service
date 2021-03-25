@@ -11,54 +11,91 @@ const RoadMap = (props, {navigation}) => {
     let roadMapId = props.route.params.roadMapId;
     let roadmap = props.route.params.roadmap;
 
+    const [startfirst, setstart] = useState(true);
+    const [callStem, setStem] = useState(null);
+
+    const root = {
+      title : "빅데이터",
+      key : "bigdata"
+    }
+
     const sections = [
       {
-        title: "Vegetables",
-        key: "vegetables",
+        level : 0,
+        title: "줄기1",
+        key: "줄기1",
         data: [
          {
-           key: "vegetables",
+           key: "줄기1",
            list: [
               {
-                name: "Carrot",
-                color: "Orange",
+                name: "bookname1",
+                color: "설명1",
               },
               {
-                name: "Cabbage",
-                color: "Purple",
+                name: "bookname2",
+                color: "설명1",
               },
             ],
           },
         ],
       },
       {
-        title: "Fruits",
-        key: "fruits",
+        level : 1,
+        title: "줄기2",
+        key: "줄기2",
         data: [
           {
-            key: 'fruits',
+            key: '줄기2',
             list: [
               {
-                name: "Apple",
-                color: "Green",
+                name: "bookname1",
+                color: "설명1",
               },
               {
-                name: "Banana",
-                color: "Yellow",
+                name: "bookname2",
+                color: "설명1",
               },
               {
-                name: "Strawberry",
-                color: "Red",
+                name: "bookname3",
+                color: "설명1",
               },
               {
-                name: "Blueberry",
-                color: "Blue",
+                name: "bookname4",
+                color: "설명1",
               },
             ],
           },
         ],
       },
     ]
+
+    const stemList = [
+      {
+        level : 0,
+        parens : "줄기1",
+        title : "가지1",
+        key : "가지1",
+        data: [
+          {
+            key: "가지1",
+            list: [
+               {
+                 name: "가지의 책",
+                 color: "설명1",
+               },
+               {
+                 name: "가지의 책2",
+                 color: "설명2",
+               },
+             ],
+           },
+         ],
+      }
+    ]
+    const [myRoot, setmyRoot] = useState(root);
+    const [mySection, setmySection] = useState(sections);
+    const [myStem, setmyStem] = useState(stemList);
 
     const renderSection = ({ item }) => {
       return (
@@ -71,15 +108,50 @@ const RoadMap = (props, {navigation}) => {
       )
     }
 
-    const renderSectionHeader = ({ section }) => {
-      return <TouchableOpacity><Text>{section.title}</Text></TouchableOpacity>
+    const renderStem = ({ ste }) => {
+      
+      if(ste.parens == callStem){
+        return (
+          <FlatList
+            data={ste.list}
+            numColumns={3}
+            renderItem={renderListItem}
+            keyExtractor={keyExtractor}
+          />
+        )
+      }
     }
+
+    const renderSectionHeader = ({ section }) => {
+      return <TouchableOpacity ><Text>{section.title}</Text></TouchableOpacity>
+    }
+
+    const renderStemHeader = ({ste}) => {
+      if(ste.title == callStem){
+        return <TouchableOpacity><Text>{stem.title}</Text></TouchableOpacity>
+      }
+    }
+
+    // const renderStemHeader = ({stemList}) => {
+    //   return <TouchableOpacity><Text>{stemList.title}</Text></TouchableOpacity>
+    // }
+
+    // const renderStem = ({ item }) => {
+    //   return (
+    //     <FlatList
+    //       data={item.list}
+    //       numColumns={3}
+    //       renderItem={renderListItem}
+    //       keyExtractor={keyExtractor}
+    //     />
+    //   )
+    // }
 
     const renderListItem = ({ item }) => {
       return (
         <View style={{height: 50, width: 100, borderColor: "green", borderWidth: 1 }}>
-          <Text>{item.name}</Text>
-          <Text>{item.color}</Text>
+          <TouchableOpacity><Text>{item.name}</Text></TouchableOpacity>
+          <TouchableOpacity><Text>{item.color}</Text></TouchableOpacity>
         </View>
       )
     }
@@ -121,14 +193,30 @@ const RoadMap = (props, {navigation}) => {
         
                 <View style = {{flex : 9}}>
 
-                <FlatList>
-                  
-                </FlatList>
-                <SectionList
-                  sections={sections}
-                  renderSectionHeader={renderSectionHeader}
-                  renderItem={renderSection}
-                />
+                {startfirst ? (
+                  <View>
+                  <TouchableOpacity onPress ={() => setstart(!startfirst)}><Text>{root.title}</Text></TouchableOpacity>
+                  <Text>----테스터 용</Text>
+                  setmyRoot({myRoot.title ="테스터"});
+                  <Text>{myRoot.title} and {myStem[0].title}</Text>
+                  </View>
+                ) : (
+                  <View>
+                  <TouchableOpacity onPress ={() => setstart(!startfirst)}><Text>{root.title}</Text></TouchableOpacity>
+                  <SectionList
+                    sections={sections}
+                    renderSectionHeader={renderSectionHeader}
+                    renderItem={renderSection}
+                  />
+                  {/* if (!callStem) {
+                    <SectionList
+                    sections = {myStem}
+                    renderSectionHeader = {renderStemHeader}
+                    renderItem={renderStem}
+                  />
+                  } */}
+                  </View>
+                )}
                 </View>
               </View>
 
