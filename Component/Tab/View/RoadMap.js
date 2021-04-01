@@ -73,68 +73,98 @@ const RoadMap = (props, {navigation}) => {
     const stemList = [
       {
         level : 0,
-        parens : "줄기1",
-        title : "가지1",
-        key : "가지1",
+        title: "가지1",
+        key: "가지1",
+        data: [
+         {
+           key: "가지1",
+           list: [
+              {
+                name: "bookname1",
+                color: "설명1",
+                key: "가지1",
+              },
+              {
+                name: "bookname2",
+                color: "설명1",
+                key: "가지1",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        level : 1,
+        title: "가지2",
+        key: "가지2",
         data: [
           {
-            key: "가지1",
+            key: '가지2',
             list: [
-               {
-                 name: "가지의 책",
-                 color: "설명1",
-               },
-               {
-                 name: "가지의 책2",
-                 color: "설명2",
-               },
-             ],
-           },
-         ],
-      }
+              {
+                name: "bookname5",
+                color: "설명1",
+                key: '가지2',
+              },
+              {
+                name: "bookname6",
+                color: "설명1",
+                key: '가지2',
+              },
+              {
+                name: "bookname7",
+                color: "설명1",
+                key: '가지2',
+              },
+              {
+                name: "bookname8",
+                color: "설명1",
+                key: '가지2',
+              },
+            ],
+          },
+        ],
+      },
     ]
+
+
     const [myRoot, setmyRoot] = useState(root);
     const [mySection, setmySection] = useState(sections);
     const [myStem, setmyStem] = useState(stemList);
+    const [mylevel, setlevel] = useState(-1);
 
     const renderSection = ({ item }) => {
       return (
         <FlatList
           data={item.list}
-          numColumns={3}
+          numColumns={2}
           renderItem={renderListItem}
           keyExtractor={keyExtractor}
         />
       )
     }
 
-    const renderStem = ({ ste }) => {
-      
-      if(ste.parens == callStem){
-        return (
-          <FlatList
-            data={ste.list}
-            numColumns={3}
-            renderItem={renderListItem}
-            keyExtractor={keyExtractor}
-          />
-        )
-      }
+    const renderStem = ({ item }) => {
+      return (
+        <FlatList
+          data={item.list}
+          numColumns={2}
+          renderItem={renderListStem}
+          keyExtractor={keyExtractor}
+        />
+      )
     }
 
     const renderSectionHeader = ({ section }) => {
-      return <TouchableOpacity ><Text>{section.title}</Text></TouchableOpacity>
+      return <TouchableOpacity onPress = {() => {setlevel(section.level);}}><Text>{section.title}</Text></TouchableOpacity>
     }
 
-    const renderStemHeader = ({ste}) => {
-      if(ste.title == callStem){
-        return <TouchableOpacity><Text>{stem.title}</Text></TouchableOpacity>
+
+    const renderStemHeader = ({ section }) => {
+      if (myStem[mylevel].key == section.key) {
+        return <TouchableOpacity onPress = {() => {}}><Text>{section.title}</Text></TouchableOpacity>
       }
     }
-
-    // const renderStemHeader = ({stemList}) => {
-    //   return <TouchableOpacity><Text>{stemList.title}</Text></TouchableOpacity>
-    // }
 
     // const renderStem = ({ item }) => {
     //   return (
@@ -154,6 +184,17 @@ const RoadMap = (props, {navigation}) => {
           <TouchableOpacity><Text>{item.color}</Text></TouchableOpacity>
         </View>
       )
+    }
+
+    const renderListStem = ({ item }) => {
+      if (myStem[mylevel].key == item.key) {
+        return (
+          <View style={{height: 50, width: 100, borderColor: "green", borderWidth: 1 }}>
+            <TouchableOpacity><Text>{item.name}</Text></TouchableOpacity>
+            <TouchableOpacity><Text>{item.color}</Text></TouchableOpacity>
+          </View>
+        )
+      }
     }
 
     const keyExtractor = (item) => {
@@ -197,24 +238,44 @@ const RoadMap = (props, {navigation}) => {
                   <View>
                   <TouchableOpacity onPress ={() => setstart(!startfirst)}><Text>{root.title}</Text></TouchableOpacity>
                   <Text>----테스터 용</Text>
-                  setmyRoot({myRoot.title ="테스터"});
                   <Text>{myRoot.title} and {myStem[0].title}</Text>
                   </View>
                 ) : (
                   <View>
                   <TouchableOpacity onPress ={() => setstart(!startfirst)}><Text>{root.title}</Text></TouchableOpacity>
                   <SectionList
-                    sections={sections}
+                    sections={mySection}
                     renderSectionHeader={renderSectionHeader}
                     renderItem={renderSection}
                   />
-                  {/* if (!callStem) {
-                    <SectionList
-                    sections = {myStem}
-                    renderSectionHeader = {renderStemHeader}
-                    renderItem={renderStem}
-                  />
-                  } */}
+                  
+                  {mylevel >= 0 ? 
+                  (
+                    <View>
+                      <Text>참인 경우{mylevel}
+                        {myStem[mylevel].title}
+                        and {callStem}
+                      </Text>
+                        {/* <SectionList
+                        sections = {stemList[]}
+                        /> */}
+                        <SectionList
+                          sections={myStem}
+                          renderSectionHeader={renderStemHeader}
+                          renderItem={renderStem}
+                        />
+                      
+                    </View>
+                  )
+                  :
+                  (
+                    <View>
+                      <Text>
+                      0인 경우를 포함한 거짓인 경우
+                      </Text>
+                    </View>
+                  )}
+                  
                   </View>
                 )}
                 </View>
