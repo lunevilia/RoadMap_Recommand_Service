@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
+import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const MainPage = (props,{navigation}) => {
@@ -24,6 +25,12 @@ const MainPage = (props,{navigation}) => {
 
   const [getbook, setGetBook] = useState(["0"]);
   const [getrank, setGetRank] = useState(["0"]);
+
+  const [search, setSearch] = useState(['']);
+
+  const updateSearch = (search) => {
+    setSearch({search});
+  }
 
   if(getbook == "0"){
     if (ip != null){
@@ -141,27 +148,59 @@ const MainPage = (props,{navigation}) => {
   return(
     <SafeAreaView style={styles.container}>
       <ScrollView>
-            {/* 사용자 마인드맵 */}
+            {/* 사용자 정보 및 검색창 */}
             <View style = {{flex : 1, margin : 10}}>
-
               <View style = {{flexDirection : 'row', justifyContent : 'space-between'}}>
-                <Text style = {styles.rankName}>로드맵</Text>
-
-                <TouchableOpacity style = {{justifyContent : 'center', margin : 10}} onPress = {() =>{
-                    props.navigation.navigate("MyPage", {userId : userId, ip : ip})
-                  }}>
-                  <Text style = {{color : 'blue', fontSize : 20}}>마이 페이지</Text>
+                <TouchableOpacity style = {{flexDirection : 'row', flex : 1}} onPress = {() =>{
+                  props.navigation.navigate("MyPage", {userId : userId, ip : ip})
+                }}>
+                  <Image style = {{width : 50, height : 50, padding : 10}} source ={require("../img/user.png")}></Image>
+                  <Text style = {styles.rankName}>{userId}</Text>
                 </TouchableOpacity>
+
+                <View style = {{flex : 1}}>
+                  <SearchBar
+                    lightTheme = 'true'
+                    round = "true"
+                    onChangeText = {updateSearch}
+                    value = {search}
+                    containerStyle = {{backgroundColor : 'white', height : 50}}
+                    inputContainerStyle = {{backgroundColor : 'white'}}>
+                  </SearchBar>
+                </View>
+
+              </View>
+                
+                {/* 즐겨찾기 및 추천 버튼 */}
+              <View style = {{flexDirection : 'row', justifyContent : 'space-between'}}>
+                
+                
+                <View style = {{flex : 1}}>
+
+                </View>
+                
+                <View style = {{flexDirection : 'row'}}>
+                  <TouchableOpacity style = {{justifyContent : 'center', margin : 10}} onPress = {() =>{
+                      
+                    }}>
+                    <Text style = {{color : 'blue', fontSize : 20}}>즐겨찾기</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style = {{justifyContent : 'center', margin : 10}} onPress = {() =>{
+                      
+                    }}>
+                    <Text style = {{color : 'blue', fontSize : 20}}>추천</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
 
-              <TouchableOpacity style = {styles.mindMapArea} onPress = {() =>{
-                    props.navigation.navigate("MyPage", {userId : userId, ip : ip})
-                  }}>
-                <Image style = {styles.mindMapImage} source = {require('../img/loadmap_illustrate_fix.png')}></Image>
-              </TouchableOpacity>
+              {/* 로드맵 뷰 */}
+              <View style = {styles.roadMapArea} >
+                  <ScrollView horizontal = {true}>
+                    {bookList}
+                </ScrollView>
+              </View>
             </View>
 
-            <View style = {styles.line}></View>
 
           {/* 인기 책순위  */}
           <View style = {styles.rankArea} >
@@ -215,8 +254,11 @@ const styles = StyleSheet.create({
     width : wp("90%"),
     justifyContent : 'center',
   },
-  myPageButton : {
-
+  roadMapArea : {
+    flex : 1,
+    borderColor : 'lightgray',
+    borderWidth : 1,
+    paddingBottom : 10
   },
   rankArea : {
     flex : 1,

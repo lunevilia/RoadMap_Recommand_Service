@@ -16,8 +16,8 @@ import NoticePage from "../Tab/View/NoticePage";
 import MyPage from "../Tab/View/MyPage";
 import RoadMapSocial from "../Tab/View/RoadMapSocial";
 import RoadMap from "../Tab/View/RoadMap";
-import commentList from "../Tab/View/CommentList";
 import bookinfo from "../Tab/View/bookinfo";
+import MyLoadmap from "../Tab/View/MyLoadmap";
 
 const TabStack = createBottomTabNavigator();
 const SignUpStack = createStackNavigator();
@@ -31,11 +31,13 @@ const AppStack = createStackNavigator();
 const MainStackScreen = ({userId, ip}) => {
     return(
         <MainStack.Navigator>
-            <MainStack.Screen name = "로드맵 추천 서비스" children={({navigation})=><MainPage userId={userId} ip = {ip} navigation={navigation}/>}/>
+            <MainStack.Screen
+                name = "로드맵 추천 서비스" children={({navigation})=><MainPage userId={userId} ip = {ip} navigation={navigation}/>}
+                options = {{headerShown : false}}/>
             <MainStack.Screen name = "MyPage" component = {MyPage}/>
+            <MainStack.Screen name = "MyLoadmap" component = {MyLoadmap}/>
             <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
             <MainStack.Screen name = "RoadMap" component = {RoadMap}/>
-            <MainStack.Screen name = "commentList" component = {commentList}/>
             <MainStack.Screen name = "bookinfo" component={bookinfo}/>
         </MainStack.Navigator>
     );
