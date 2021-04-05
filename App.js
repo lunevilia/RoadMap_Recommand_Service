@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default function App() {
 
-  AsyncStorage.setItem('ip', '61.245.226.237');
+  AsyncStorage.setItem('ip', '');
   AsyncStorage.setItem('autoLogin', "false");
 
   return (
