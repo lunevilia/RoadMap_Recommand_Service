@@ -26,11 +26,8 @@ const MainPage = (props,{navigation}) => {
   const [getbook, setGetBook] = useState(["0"]);
   const [getrank, setGetRank] = useState(["0"]);
 
-  const [search, setSearch] = useState(['']);
-
-  const updateSearch = (search) => {
-    setSearch({search});
-  }
+  const [userRoadmap, setUserRoadmap] = useState([]);
+  const [userRoadmapId, setUserRoadmapId] = useState([]);
 
   if(getbook == "0"){
     if (ip != null){
@@ -135,6 +132,18 @@ const MainPage = (props,{navigation}) => {
     )
   );
     
+  const userList = bookSrc.map((bookSrc, index) => 
+  (              
+    <TouchableOpacity key = {index} style = {styles.imageArea} onPress ={() =>{
+      //Linking.openURL(bookUrl[index])
+      props.navigation.navigate("RoadMapSocial", {userRoadmapId : userRoadmapId[index], userId : userId, ip : ip});
+    }}>
+      <Image style = {styles.roadmapImage} source = {{uri : bookSrc}}></Image> 
+      <Text style = {styles.imageName}>{bookName[index]}</Text>
+    </TouchableOpacity>
+  )
+  );
+
   //로드맵 순위 컴포넌트화
   const roadMapList = roadmap.map((roadmap, index) =>(
     <TouchableOpacity key = {index} onPress = {() =>{
@@ -158,21 +167,24 @@ const MainPage = (props,{navigation}) => {
                   <Text style = {styles.rankName}>{userId}</Text>
                 </TouchableOpacity>
 
-                <View style = {{flex : 1}}>
+                <View style = {{flex : 1, justifyContent : 'center', marginLeft : 10, marginRight : 10}} onPress = {() => {
+                  props.navigation.navigate("SearchPage", {userId : userId, ip : ip})
+                }}>
                   <SearchBar
                     lightTheme = 'true'
                     round = "true"
-                    onChangeText = {updateSearch}
-                    value = {search}
-                    containerStyle = {{backgroundColor : 'white', height : 50}}
-                    inputContainerStyle = {{backgroundColor : 'white'}}>
+                    platform = "android"
+                    disabled = "true"
+                    leftIconContainerStyle = {{marginRight : "80%"}}
+                    containerStyle = {{backgroundColor : 'white', height : 'auto', borderWidth : 1, borderRadius : 10, borderColor : 'gray'}}
+                    inputContainerStyle = {{backgroundColor : 'white', height : 20}}>
                   </SearchBar>
                 </View>
 
               </View>
                 
                 {/* 즐겨찾기 및 추천 버튼 */}
-              <View style = {{flexDirection : 'row', justifyContent : 'space-between'}}>
+              <View style = {{flexDirection : 'row', justifyContent : 'space-between', margin : 10}}>
                 
                 
                 <View style = {{flex : 1}}>
@@ -196,7 +208,7 @@ const MainPage = (props,{navigation}) => {
               {/* 로드맵 뷰 */}
               <View style = {styles.roadMapArea} >
                   <ScrollView horizontal = {true}>
-                    {bookList}
+                    {userList}
                 </ScrollView>
               </View>
             </View>
@@ -275,6 +287,13 @@ const styles = StyleSheet.create({
   image : {
     height : 150,
     width : 100,
+    margin : 10,
+    borderColor : 'lightgray',
+    borderWidth : 1
+  },
+  roadmapImage : {
+    height : 100,
+    width : 150,
     margin : 10,
     borderColor : 'lightgray',
     borderWidth : 1

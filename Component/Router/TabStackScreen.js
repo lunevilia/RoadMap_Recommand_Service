@@ -18,6 +18,7 @@ import RoadMapSocial from "../Tab/View/RoadMapSocial";
 import RoadMap from "../Tab/View/RoadMap";
 import bookinfo from "../Tab/View/bookinfo";
 import MyLoadmap from "../Tab/View/MyLoadmap";
+import SearchPage from "../Tab/View/SearchPage";
 
 const TabStack = createBottomTabNavigator();
 const SignUpStack = createStackNavigator();
@@ -35,6 +36,7 @@ const MainStackScreen = ({userId, ip}) => {
                 name = "로드맵 추천 서비스" children={({navigation})=><MainPage userId={userId} ip = {ip} navigation={navigation}/>}
                 options = {{headerShown : false}}/>
             <MainStack.Screen name = "MyPage" component = {MyPage}/>
+            <MainStack.Screen name = "SearchPage" component = {SearchPage}/>
             <MainStack.Screen name = "MyLoadmap" component = {MyLoadmap}/>
             <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
             <MainStack.Screen name = "RoadMap" component = {RoadMap}/>
