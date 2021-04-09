@@ -66,7 +66,7 @@ const SignUp = ({navigation}) => {
 //http://localhost:8000/register?userId=a&userPw=a&userEmail=a&work=a
   async function register(){
     try{
-      const response = await axios.get("http://"+ip+"/register",{
+      const response = await axios.get("http://"+ip+":8080/register",{
         params : {
           userName : inputUserName,
           userId : inputId,
