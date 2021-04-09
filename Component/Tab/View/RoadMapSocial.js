@@ -119,7 +119,7 @@ const RoadMapSocial = (props, {navigation}) => {
       let length = response.data.length
 
       for(var i = 0; i<length; i++){
-        newUserArray.push(response.data[i].UID);
+        newUserArray.push(response.data[i].USERID);
         newUserCommentArray.push(response.data[i].UCOMMENT);
         newDate.push(response.data[i].UDATE);
       }

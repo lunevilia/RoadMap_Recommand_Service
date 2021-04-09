@@ -83,13 +83,13 @@ const SignUp = ({navigation}) => {
       
       let result = response.data
       
-      if (result == "success") {
+      if (result.result == "success") {
         alert("회원가입에 성공하였습니다!");
         navigation.dispatch(
           StackActions.replace('login')
         );
       }
-      else if(result == "exist"){
+      else if(result.result == "exist"){
         alert("존재하는 아이디 입니다.");
       }
       else{
