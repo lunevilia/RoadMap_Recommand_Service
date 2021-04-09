@@ -30,10 +30,11 @@ public class mainController {
 	
 	// 회원가임
 	@GetMapping(path = "/register")
-	public String register(@RequestParam String userName, String userId, String userPw, String userAge, String userArea, String userJob, String userInterest, String userEmail, String userPhone, String userSex) {
+	public Map<String,String> register(@RequestParam String userName, String userId, String userPw, String userAge, String userArea, String userJob, String userInterest, String userEmail, String userPhone, String userSex) {
+		
+		UserDto user = new UserDto();
 		
 		if(uMapper.checkUser(userId)==null) {		
-			UserDto user = new UserDto();
 			user.setUserName(userName);
 			user.setUserId(userId);
 			user.setUserPw(userPw);
@@ -48,12 +49,12 @@ public class mainController {
 			uMapper.insertUser(user);
 			
 			result = "success";
+			return user.information();
 		}
 		else {
-			result = "exist";
+			
+			return user.exist();
 		}
-		
-		return result;
 	}
 	
 	// 로그인

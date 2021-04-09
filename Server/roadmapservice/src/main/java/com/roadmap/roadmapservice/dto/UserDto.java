@@ -1,5 +1,9 @@
 package com.roadmap.roadmapservice.dto;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class UserDto {
 	
 	private String userName;
@@ -12,6 +16,32 @@ public class UserDto {
 	private String userEmail;
 	private String userPhone;
 	private String userSex;
+	
+	Map<String, String> map = new HashMap<String, String>();
+	
+	public Map<String, String> information(){
+		
+		map.put("result", "success");
+		map.put("userName", userName);
+		map.put("userId", userId);
+		map.put("userPw", userPw);
+		map.put("userAge", String.valueOf(userAge));
+		map.put("userArea", userArea);
+		map.put("userJob",  userJob);
+		map.put("userInterest", userInterest);
+		map.put("userEmail", userEmail);
+		map.put("userPhone", userPhone);
+		map.put("userSex", userSex);
+		
+		return map;
+	}
+	
+	public Map<String,String> exist(){
+		
+		map.put("result", "exist");
+		
+		return map;
+	}
 	
 	public String getUserId() {
 		return userId;
