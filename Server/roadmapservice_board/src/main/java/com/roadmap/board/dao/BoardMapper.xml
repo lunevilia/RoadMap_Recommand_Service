@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <!-- 쿼리문 작성 -->
+    
+<mapper namespace="com.roadmap.board.dao.BoardMapper">
+	
+	<select id="getComment" parameterType="string" resultType = "hashMap">
+        <!-- #SELECT UID, UCOMMENT, UDATE FROM USERCOMMENT WHERE RID = #{rid} -->
+        SELECT USERINFO.USERID, USERCOMMENT.UCOMMENT, USERCOMMENT.UDATE FROM USERINFO, USERCOMMENT WHERE USERINFO.UID = USERCOMMENT.UID AND USERCOMMENT.RID = #{rid}
+    </select>
+    
+    <insert id="insertComment" parameterType="commentDto">
+    	INSERT INTO USERCOMMENT(RID, UID, UCOMMENT, UDATE) values (#{rid}, #{uid}, #{ucomment}, #{udate}) 
+    </insert>
+    
+    <delete id="deleteComment" parameterType = "commentDto">
+    	DELETE FROM USERCOMMENT WHERE UID=(#{uid}) and UDATE = (#{udate})
+    </delete>
+    
+    <select id = "getLoveCount" parameterType = "int" resultType = "String">
+    	SELECT COUNT(RID) FROM ROADMAPLOVE WHERE RID = #{rid}
+    </select>
+    
+    <select id = "getLoveStatus" parameterType = "boardDto" resultType = "String">
+    	SELECT DISTINCT(RID) FROM ROADMAPLOVE WHERE UID = #{uid} and RID = #{rid}
+    </select>
+    
+    <insert id = "saveLove" parameterType = "boardDto">
+    	INSERT INTO ROADMAPLOVE(RID, UID) VALUES (#{rid}, #{uid})
+    </insert>
+    
+    <delete id = "deleteLove" parameterType = "boardDto">
+    	DELETE FROM ROADMAPLOVE WHERE UID = #{uid} and RID = #{rid}
+    </delete>
+    
+    <select id = "getUid" parameterType = "String" resultType = "String">
+    	SELECT UID FROM USERINFO WHERE USERID = #{uid}
+    </select>
+</mapper>
