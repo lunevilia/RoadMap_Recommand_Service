@@ -3,6 +3,8 @@ package com.roadmap.roadmapinfo.dto;
 public class RoadmapDto {
 	private int rid;
 	private int uid;
+	private String userId;
+	private String ruid;
 	private String rname;
 	private String rinfo;
 	
@@ -26,7 +28,7 @@ public class RoadmapDto {
 		this.rname = rname;
 	}
 	
-	public String getRanem() {
+	public String getRname() {
 		return rname;
 	}
 	
@@ -36,5 +38,21 @@ public class RoadmapDto {
 	
 	public String getRinfo() {
 		return rinfo;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getRuid() {
+		return ruid;
+	}
+
+	public void setRuid(String ruid) {
+		this.ruid = ruid;
 	}
 }

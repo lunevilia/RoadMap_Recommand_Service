@@ -23,9 +23,18 @@ public class mainController {
 		return "success";
 	}
 	
+	// 로드맵 작성자 아이디 리턴
+	@GetMapping(path = "/getruserid")
+	public String getRuserId(@RequestParam int ruid) {
+		
+		result = uMapper.getUserId(ruid);
+		
+		return result;
+	}
+	
 	//로드맵 1개 정보 가져오기
 	@GetMapping(path = "/getroadmapinfo")
-	public List<RoadmapDto> getComment(@RequestParam String rid) {
+	public List<RoadmapDto> getRoadmapInfo(@RequestParam String rid) {
 		
 		RoadmapDto roadmapDto = new RoadmapDto();
 		roadmapDto.setRid(Integer.parseInt(rid));
@@ -33,5 +42,37 @@ public class mainController {
 		List<RoadmapDto> list = uMapper.getRoadmapInfo(roadmapDto);
 		System.out.println(list);
 		return list;
+	}
+	
+	//좋아요 로드맵 가져오기
+	@GetMapping(path = "/getuserloveroadmap")
+	public List<RoadmapDto> getUserLoveRoadmap(@RequestParam String userId){
+		
+		try {
+			List<RoadmapDto> list = uMapper.getUserLoveRoadmap(userId);
+			System.out.println(list);
+			return list;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	// 내가 작성한 로드맵 가져오기
+	@GetMapping(path = "/getuserroadmap")
+	public List<RoadmapDto> getUserRoadmap(@RequestParam String userId){
+		
+		try {
+			List<RoadmapDto> list = uMapper.getUserRoadmap(userId);
+			System.out.println(list);
+			return list;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 }

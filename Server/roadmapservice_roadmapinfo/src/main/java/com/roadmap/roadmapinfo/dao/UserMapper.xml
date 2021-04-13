@@ -6,20 +6,20 @@
     <!-- 쿼리문 작성 -->
     
 <mapper namespace="com.roadmap.roadmapinfo.dao.UserMapper">
-<!--
-	<select id="getComment" parameterType="string" resultType = "hashMap">
-        SELECT UID, UCOMMENT, UDATE FROM USERCOMMENT WHERE RID = #{rid}
-    </select>
-    
-    <insert id="insertComment" parameterType="commentDto">
-    	INSERT INTO USERCOMMENT(RID, UID, UCOMMENT, UDATE) values (#{rid}, #{uid}, #{ucomment}, #{udate}) 
-    </insert>
-    
-    <delete id="deleteComment" parameterType = "commentDto">
-    	DELETE FROM USERCOMMENT WHERE UID=(#{uid}) and UDATE = (#{udate})
-    </delete> -->
     
     <select id = "getRoadmapInfo" parameterType = "roadmapDto" resultType = "hashMap">
     	SELECT UID, RNAME, RINFO FROM ROADMAPLIST WHERE RID = (#{rid})
+    </select>
+    
+    <select id = "getUserLoveRoadmap" parameterType = "roadmapDto" resultType = "hashMap">
+    	SELECT ROADMAPLOVE.RID, ROADMAPLIST.UID, ROADMAPLIST.RNAME FROM ROADMAPLOVE, ROADMAPLIST, USERINFO WHERE ROADMAPLOVE.UID = USERINFO.UID AND USERINFO.USERID = #{userId} AND ROADMAPLOVE.RID = ROADMAPLIST.RID
+    </select>
+    
+    <select id = "getUserId" parameterType = "int" resultType = "String">
+    	SELECT USERID FROM USERINFO WHERE UID = #{uid}
+    </select>
+    
+    <select id = "getUserRoadmap" parameterType = "roadmapDto" resultType = "hashmap">
+    	SELECT ROADMAPLIST.RID, ROADMAPLIST.UID, ROADMAPLIST.RNAME FROM ROADMAPLIST, USERINFO WHERE USERINFO.USERID = #{userId} AND USERINFO.UID = ROADMAPLIST.UID
     </select>
 </mapper>

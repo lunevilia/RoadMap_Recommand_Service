@@ -6,4 +6,10 @@ import com.roadmap.roadmapinfo.dto.RoadmapDto;
 
 public interface UserMapper {
 	public List<RoadmapDto> getRoadmapInfo(RoadmapDto roadmapDto);
+	
+	public List<RoadmapDto> getUserLoveRoadmap(String userId);
+	
+	public List<RoadmapDto> getUserRoadmap(String userId);
+	
+	public String getUserId(int uid);
 }
