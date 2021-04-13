@@ -124,7 +124,9 @@ const MyPage = (props, {navigation}) => {
         </View>
 
         <View style = {styles.block_2}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress = {() => {
+            props.navigation.navigate("MyLoadmap", {userId : userId, ip : ip});
+          }}>
             <Text style = {styles.smalltxt}>내 로드맵</Text>
           </TouchableOpacity>
           <TouchableOpacity>
