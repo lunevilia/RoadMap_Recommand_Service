@@ -8,7 +8,7 @@
 <mapper namespace="com.roadmap.social.dao.UserMapper">
     
     <select id = "getTopRank" resultType = "hashMap">
-    	SELECT RANK, RID, RNAME FROM TOPROADMAP
+    	SELECT TOPROADMAP.RANK, ROADMAPLIST.UID, TOPROADMAP.RID, TOPROADMAP.RNAME FROM TOPROADMAP, ROADMAPLIST WHERE ROADMAPLIST.RID = TOPROADMAP.RID
     </select>
     
 	<select id = "getTopBook" resultType = "hashMap">
