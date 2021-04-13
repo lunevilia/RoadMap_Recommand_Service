@@ -20,12 +20,16 @@ const RoadMapSocial = (props, {navigation}) => {
   let roadMapId = props.route.params.roadMapId;
   let roadmap = props.route.params.roadmap;
   let userId = props.route.params.userId;
+  let ruid = props.route.params.ruid;
 
   let [info, setInfo] = useState([]);
   let [user, setUser] = useState([]);
   let [userComment, setUserComment] = useState([]);
   let [date, setDate] = useState([]);
   let [like, setLike] = useState(["",0]);
+
+  // 사용자 아이디와 로드맵 제작자 아이디 비교를 위한 변수, 수정삭제 권한 부여할떄 사용
+  let [RUID, setRUID] = useState();
 
   let [moddifyindex, setModifyIndex] = useState([]);
 
@@ -40,7 +44,24 @@ const RoadMapSocial = (props, {navigation}) => {
       getComment();
       getRoadmapInfo();
       getLikeInfo();
+      getRuid();
       setGetData("1");
+    }
+  }
+
+  //ruid 변환
+  async function getRuid(){
+    try {
+      const response = await axios.get("http://"+ip+":8083/getruserid",{
+        params : {
+          ruid : ruid
+        }
+      });
+      console.log(response.data);
+      setRUID(response.data);
+
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -48,7 +69,6 @@ const RoadMapSocial = (props, {navigation}) => {
   async function getRoadmapInfo(){
     try{
 
-      var newRoadmapInfo = [...info];
 
       const response = await axios.get("http://"+ip+":8083/getroadmapinfo",{
         params : {
@@ -324,7 +344,7 @@ const RoadMapSocial = (props, {navigation}) => {
         }
       }}>
         <View style = {styles.imageandname}>
-          <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
+          <Image style = {styles.userimage} source = {require('../../img/user.png')}></Image>
           <Text style = {styles.user}>{user}</Text>
         </View>
         <Text style = {styles.usercomment}>{userComment[index]}</Text>
