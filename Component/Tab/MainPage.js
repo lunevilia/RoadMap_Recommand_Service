@@ -17,17 +17,20 @@ const MainPage = (props,{navigation}) => {
   });
 
   // const userId = props.route.params.userId;
-  var [bookName, setBookName] = useState(["-", "-", "-", "-", "-", "-"]);
-  const [bookSrc, setBookSrc] = useState(["-","-","-","-","-","-"]);
-  const [bookUrl, setBookUrl] = useState(["-","-","-","-","-","-"]);
+  var [bookName, setBookName] = useState(["-", "-", "-", "-", "-"]);
+  const [bookSrc, setBookSrc] = useState(["-","-","-","-","-"]);
+  const [bookUrl, setBookUrl] = useState(["-","-","-","-","-"]);
   const [roadmap, setRoadMap] = useState(["-","-","-","-","-"])
   const [roadMapId, setRoadMapId] = useState(["-","-","-","-","-"])
+  const [roadmapUid, setRoadmapUid] = useState(["-","-","-","-","-"])
 
   const [getbook, setGetBook] = useState(["0"]);
   const [getrank, setGetRank] = useState(["0"]);
+  const [getroadmap, setGetLoveRoadmap] = useState(["0"]);
 
   const [userRoadmap, setUserRoadmap] = useState([]);
   const [userRoadmapId, setUserRoadmapId] = useState([]);
+  const [ruid, setRuid] = useState([]);
 
   if(getbook == "0"){
     if (ip != null){
@@ -43,16 +46,56 @@ const MainPage = (props,{navigation}) => {
     }
   }
 
+  if(getroadmap == "0"){
+    if(ip != null){
+      getloveroadmap();
+      setGetLoveRoadmap("1");
+    }
+  }
+
+  //좋아요 로드맵 가져오기
+  async function getloveroadmap(){
+    try{
+      var newRoadmapArray = [];
+      var newRoadmapIdArray = [];
+      var newRuidArray = [];
+
+      const response = await axios.get("http://"+ip+":8083/getuserloveroadmap", {
+        params : {
+          userId : userId
+        }
+      });
+
+      let result = response.data;
+
+      if (result != null){
+        for (var i = 0; i < result.length; i++){
+          newRoadmapArray.push(result[i].RNAME);
+          newRoadmapIdArray.push(result[i].RID);
+          newRuidArray.push(result[i].UID);
+        }
+        
+        setUserRoadmap(newRoadmapArray);
+        setUserRoadmapId(newRoadmapIdArray);
+        setRuid(newRuidArray);
+      }
+
+    }catch(error){
+      console.log(error);
+    }
+  }
+
   //책 순위 가져오기
   async function getTopBook(){
     try{
       var newBookNameArray = [...bookName];
 
-      // const response = await axios.get("http://"+ip+":8081/gettopbook");
       const response = await axios.get("http://"+ip+":8081/gettopbook");
 
-      for (var i = 0; i<bookName.length; i++){
-        newBookNameArray[i] = response.data[i].BNAME;
+      result = response.data;
+
+      for (var i = 0; i<result.length; i++){
+        newBookNameArray[i] = result[i].BNAME;
       }
 
       setBookName(newBookNameArray);
@@ -68,7 +111,9 @@ const MainPage = (props,{navigation}) => {
   async function getBookInfo(bookarray){
     var newSrcArray = [...bookSrc];
     var newUrlArray = [...bookUrl];
-  
+
+    console.log(bookarray);
+
     for(var i = 0; i<bookName.length; i++){
       try {
         const response = await axios.get("https://dapi.kakao.com/v3/search/book?",{
@@ -102,16 +147,18 @@ const MainPage = (props,{navigation}) => {
     try{
       var newRoadmapArray = [...roadmap];
       var newRoadmapIdArray = [...roadMapId];
-
+      var newRoadmapUIDArray = [...roadmapUid];
       const response = await axios.get("http://"+ip+":8081/gettoprank");
 
       for(var i = 0; i<5; i++){
         newRoadmapArray[i] = response.data[i].RNAME;
         newRoadmapIdArray[i] = response.data[i].RID;
+        newRoadmapUIDArray[i] = response.data[i].UID;
       }
 
       setRoadMap(newRoadmapArray);
       setRoadMapId(newRoadmapIdArray);
+      setRoadmapUid(newRoadmapUIDArray);
 
       console.log("roadmap success");
     } catch(error){
@@ -132,14 +179,14 @@ const MainPage = (props,{navigation}) => {
     )
   );
     
-  const userList = bookSrc.map((bookSrc, index) => 
+  //사용자 좋아요 로드맵 컴포넌트화
+  const userList = userRoadmap.map((userRoadmap, index) => 
   (              
     <TouchableOpacity key = {index} style = {styles.imageArea} onPress ={() =>{
-      //Linking.openURL(bookUrl[index])
-      props.navigation.navigate("RoadMapSocial", {userRoadmapId : userRoadmapId[index], userId : userId, ip : ip});
+      props.navigation.navigate("RoadMapSocial", {ruid : ruid[index], roadmap : userRoadmap, roadMapId : userRoadmapId[index], userId : userId, ip : ip});
     }}>
-      <Image style = {styles.roadmapImage} source = {{uri : bookSrc}}></Image> 
-      <Text style = {styles.imageName}>{bookName[index]}</Text>
+      <Image style = {styles.roadmapImage} source = {require("../img/loadmap_illustrate.png")}></Image> 
+      <Text style = {styles.imageName}>{userRoadmap}</Text>
     </TouchableOpacity>
   )
   );
@@ -147,7 +194,7 @@ const MainPage = (props,{navigation}) => {
   //로드맵 순위 컴포넌트화
   const roadMapList = roadmap.map((roadmap, index) =>(
     <TouchableOpacity key = {index} onPress = {() =>{
-      props.navigation.navigate("RoadMapSocial", {roadMapId : roadMapId[index], roadmap : roadmap, userId : userId, ip : ip})
+      props.navigation.navigate("RoadMapSocial", {ruid : roadmapUid[index], roadMapId : roadMapId[index], roadmap : roadmap, userId : userId, ip : ip})
     }}>
         <Text style = {styles.roadMapName}>{index+1}.  {roadmap}</Text>
       </TouchableOpacity>
@@ -164,10 +211,10 @@ const MainPage = (props,{navigation}) => {
                   props.navigation.navigate("MyPage", {userId : userId, ip : ip})
                 }}>
                   <Image style = {{width : 50, height : 50, padding : 10}} source ={require("../img/user.png")}></Image>
-                  <Text style = {styles.rankName}>{userId}</Text>
+                  <Text style = {styles.userName}>{userId}</Text>
                 </TouchableOpacity>
 
-                <View style = {{flex : 1, justifyContent : 'center', marginLeft : 10, marginRight : 10}} onPress = {() => {
+                <TouchableOpacity style = {{flex : 1, justifyContent : 'center', marginLeft : 10, marginRight : 10}} onPress = {() => {
                   props.navigation.navigate("SearchPage", {userId : userId, ip : ip})
                 }}>
                   <SearchBar
@@ -179,7 +226,7 @@ const MainPage = (props,{navigation}) => {
                     containerStyle = {{backgroundColor : 'white', height : 'auto', borderWidth : 1, borderRadius : 10, borderColor : 'gray'}}
                     inputContainerStyle = {{backgroundColor : 'white', height : 20}}>
                   </SearchBar>
-                </View>
+                </TouchableOpacity>
 
               </View>
                 
@@ -193,7 +240,7 @@ const MainPage = (props,{navigation}) => {
                 
                 <View style = {{flexDirection : 'row'}}>
                   <TouchableOpacity style = {{justifyContent : 'center', margin : 10}} onPress = {() =>{
-                      
+                      getloveroadmap();
                     }}>
                     <Text style = {{color : 'blue', fontSize : 20}}>즐겨찾기</Text>
                   </TouchableOpacity>
@@ -275,6 +322,11 @@ const styles = StyleSheet.create({
   rankArea : {
     flex : 1,
     margin : 10
+  },
+  userName : {
+    fontSize : 30,
+    fontWeight : 'bold',
+    padding : 10
   },
   rankName : {
     fontSize : 30,
