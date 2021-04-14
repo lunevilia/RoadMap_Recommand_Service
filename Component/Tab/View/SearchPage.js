@@ -16,6 +16,7 @@ const SearchPage = (props, {navigation}) => {
 
   const [search, setSearch] = useState("");
 
+  //검색상황 반영
   const updateSearch = (search) => {
     setSearch({search});
   }
