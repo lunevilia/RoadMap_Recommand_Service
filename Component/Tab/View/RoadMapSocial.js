@@ -31,6 +31,11 @@ const RoadMapSocial = (props, {navigation}) => {
   // 사용자 아이디와 로드맵 제작자 아이디 비교를 위한 변수, 수정삭제 권한 부여할떄 사용
   let [RUID, setRUID] = useState();
 
+  // menu opened option
+  let [menuState, setMenuState] = useState(true);
+
+
+
   let [moddifyindex, setModifyIndex] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,6 +50,9 @@ const RoadMapSocial = (props, {navigation}) => {
       getRoadmapInfo();
       getLikeInfo();
       getRuid();
+      if (userId == RUID) {
+        SetMenuState(false);
+      }
       setGetData("1");
     }
   }
@@ -374,7 +382,7 @@ const RoadMapSocial = (props, {navigation}) => {
 
                   <View style = {{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
                       <Menu>
-                        <MenuTrigger style = {{margin : 10}}> 
+                        <MenuTrigger style = {{margin : 10}} disabled = {menuState}> 
                           <Icon name='ellipsis-vertical'size={30} color="black"></Icon>
                         </MenuTrigger>
                         <MenuOptions>
