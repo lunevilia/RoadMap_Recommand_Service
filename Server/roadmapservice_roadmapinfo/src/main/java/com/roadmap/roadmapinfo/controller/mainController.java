@@ -75,4 +75,20 @@ public class mainController {
 		}
 		
 	}
+	
+	@GetMapping(path = "/getsearchroadmap")
+	public List<RoadmapDto> getSearchRoadmap(@RequestParam String query){
+		
+		query = "%" + query + "%";
+		
+		try {
+			List<RoadmapDto> list = uMapper.getSearchRoadmap(query);
+			System.out.println(list);
+			return list;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
 }
