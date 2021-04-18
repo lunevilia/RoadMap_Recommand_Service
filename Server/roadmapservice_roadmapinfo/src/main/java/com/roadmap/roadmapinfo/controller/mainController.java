@@ -13,6 +13,7 @@ import com.roadmap.roadmapinfo.dto.RoadmapDto;
 @RestController
 public class mainController {
 	
+	// return 값을 지정해주는 변수
 	public String result = "";
 	
 	@Autowired
@@ -27,21 +28,30 @@ public class mainController {
 	@GetMapping(path = "/getruserid")
 	public String getRuserId(@RequestParam int ruid) {
 		
-		result = uMapper.getUserId(ruid);
-		
-		return result;
+		try{
+			result = uMapper.getUserId(ruid);
+			return result;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	//로드맵 1개 정보 가져오기
 	@GetMapping(path = "/getroadmapinfo")
 	public List<RoadmapDto> getRoadmapInfo(@RequestParam String rid) {
 		
-		RoadmapDto roadmapDto = new RoadmapDto();
-		roadmapDto.setRid(Integer.parseInt(rid));
-		
-		List<RoadmapDto> list = uMapper.getRoadmapInfo(roadmapDto);
-		System.out.println(list);
-		return list;
+		try{
+			RoadmapDto roadmapDto = new RoadmapDto();
+			roadmapDto.setRid(Integer.parseInt(rid));
+			
+			List<RoadmapDto> list = uMapper.getRoadmapInfo(roadmapDto);
+			System.out.println(list);
+			return list;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	//좋아요 로드맵 가져오기
@@ -79,6 +89,7 @@ public class mainController {
 	@GetMapping(path = "/getsearchroadmap")
 	public List<RoadmapDto> getSearchRoadmap(@RequestParam String query){
 		
+		//query가 포함된 결과를 얻기 위해서 수정
 		query = "%" + query + "%";
 		
 		try {
