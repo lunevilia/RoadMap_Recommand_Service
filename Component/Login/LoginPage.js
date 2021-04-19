@@ -3,6 +3,7 @@ import {StyleSheet, Text, ScrollView, TouchableOpacity, View, TextInput} from "r
 import {StackActions} from "@react-navigation/native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-community/async-storage';
 import { CheckBox } from 'react-native-elements';
 
@@ -16,6 +17,8 @@ const LoginPage = ({navigation}) => {
     const [autoLogin, setAutoLogin] = useState();
     const [userId, setUserId] = useState();
     const [userPw, setUserPw] = useState();
+
+    const [loading, setLoading] = useState(false);
 
     AsyncStorage.getItem("ip").then((value) =>{
       setIp(value);
@@ -75,6 +78,7 @@ const LoginPage = ({navigation}) => {
     }
 
     async function login(){
+      setLoading(true);
         try{
           const response = await axios.get("http://"+ip+":8080/login",{
             params : {
@@ -97,7 +101,7 @@ const LoginPage = ({navigation}) => {
           else{
             alert("로그인에 실패하였습니다.");
           }
-    
+      setLoading(false);
         }catch(error) {
           console.error(error);
         }
@@ -105,7 +109,10 @@ const LoginPage = ({navigation}) => {
 
   return(
       <ScrollView style={styles.container}>
-
+        <Spinner
+          visible = {loading}
+          textContent ={"로그인 중..."}>
+        </Spinner>
         <View style={styles.titleArea}>
                     <Text style={styles.title}>LoadMap</Text>
                 </View>

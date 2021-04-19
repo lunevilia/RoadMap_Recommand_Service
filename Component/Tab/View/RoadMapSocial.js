@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Modal,View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
 import{Menu, MenuOption, MenuOptions,MenuTrigger, MenuProvider} from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {KeyBoardAwareScrollVeiw} from 'react-native-keyboard-aware-scroll-view';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -32,9 +32,7 @@ const RoadMapSocial = (props, {navigation}) => {
   let [RUID, setRUID] = useState();
 
   // menu opened option
-  let [menuState, setMenuState] = useState(true);
-
-
+  const [menuState, setMenuState] = useState(true);
 
   let [moddifyindex, setModifyIndex] = useState([]);
 
@@ -42,18 +40,19 @@ const RoadMapSocial = (props, {navigation}) => {
   const [head, setHead] = useState(["삭제 하시겠습니까?"]);
   const [body, setBody] = useState([""]);
 
+  const [loading, setLoading] = useState(false);
+
   let [getdata,setGetData] = useState(["0"]);
 
   if(getdata == "0"){
     if(ip != null){
+      setLoading(true);
       getComment();
       getRoadmapInfo();
       getLikeInfo();
       getRuid();
-      if (userId == RUID) {
-        SetMenuState(false);
-      }
       setGetData("1");
+      setLoading(false);
     }
   }
 
@@ -67,6 +66,12 @@ const RoadMapSocial = (props, {navigation}) => {
       });
       console.log(response.data);
       setRUID(response.data);
+
+      if (userId == RUID) {
+        setMenuState(false);
+      }
+      console.log(userId + " " + RUID);
+      console.log(menuState);
 
     } catch (error) {
       console.log(error)
@@ -371,6 +376,10 @@ const RoadMapSocial = (props, {navigation}) => {
         {/* <ScrollView ref={scrollRef} onContentSizeChange = {() =>{
             scrollRef.current.scrollToEnd({animated : true})
           }}> */}
+          <Spinner
+            visible = {loading}
+            textContent = {'불러오는중'}>
+          </Spinner>
           <ScrollView ref={scrollRef}>
             {/* 최상단 부분 */}
             <View style = {styles.topArea}>
