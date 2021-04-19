@@ -9,8 +9,6 @@ const MyLoadmap = (props, {navigation}) => {
     let userId = props.route.params.userId;
     let ip = props.route.params.ip;
 
-    console.log(ip);
-
     //좋아요 로드맵
     let [rid, setRid] = useState([]);
     let [uid, setUid] = useState([]);
