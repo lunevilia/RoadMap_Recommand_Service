@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -15,6 +16,8 @@ const MainPage = (props,{navigation}) => {
   AsyncStorage.getItem("ip").then((value) => {
     setIp(value);
   });
+
+  const [loading, setLoading] = useState(false);
 
   // const userId = props.route.params.userId;
   var [bookName, setBookName] = useState(["-", "-", "-", "-", "-"]);
@@ -55,6 +58,7 @@ const MainPage = (props,{navigation}) => {
 
   //좋아요 로드맵 가져오기
   async function getloveroadmap(){
+    setLoading(true);
     try{
       var newRoadmapArray = [];
       var newRoadmapIdArray = [];
@@ -83,6 +87,7 @@ const MainPage = (props,{navigation}) => {
     }catch(error){
       console.log(error);
     }
+    setLoading(false);
   }
 
   //책 순위 가져오기
@@ -178,7 +183,7 @@ const MainPage = (props,{navigation}) => {
       </TouchableOpacity>
     )
   );
-    
+
   //사용자 좋아요 로드맵 컴포넌트화
   const userList = userRoadmap.map((userRoadmap, index) => 
   (              
@@ -200,6 +205,8 @@ const MainPage = (props,{navigation}) => {
       </TouchableOpacity>
     )
   );
+
+  const show = false;
 
   return(
     <SafeAreaView style={styles.container}>
@@ -254,6 +261,7 @@ const MainPage = (props,{navigation}) => {
 
               {/* 로드맵 뷰 */}
               <View style = {styles.roadMapArea} >
+                <Spinner visible = {loading} textContent = {""}></Spinner>
                   <ScrollView horizontal = {true}>
                     {userList}
                 </ScrollView>
