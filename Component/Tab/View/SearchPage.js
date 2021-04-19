@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import {StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Alert } from "react-native";
 
 const SearchPage = (props, {navigation}) => {
 
   let userId = props.route.params.userId;
+
+  const [loading, setLoading] = useState(false);
 
   const [ip,setIp] = useState();
   AsyncStorage.getItem("ip").then((value) => {
@@ -22,11 +25,17 @@ const SearchPage = (props, {navigation}) => {
 
   //검색상황 반영
   const updateQuery = (query) => {
-    setQuery({query});
-    console.log(query);
+    setQuery(query);
+  }
+
+  function resultAlert(){
+      Alert.alert("결과 없음","검색결과가 없습니다.");
   }
 
   async function searchRoadmap(){
+    
+    setLoading(true);
+
     var newRidArray = [];
     var newUidArray = [];
     var newRnameArray = [];
@@ -39,15 +48,27 @@ const SearchPage = (props, {navigation}) => {
 
     result = response.data;
 
-    for (var i = 0; i < result.length; i++){
-      newRidArray.push(result[i].RID);
-      newUidArray.push(result[i].UID);
-      newRnameArray.push(result[i].RNAME);
+    if(result.length != 0){
+      for (var i = 0; i < result.length; i++){
+        newRidArray.push(result[i].RID);
+        newUidArray.push(result[i].UID);
+        newRnameArray.push(result[i].RNAME);
+      }
+  
+      setRid(newRidArray);
+      setUid(newUidArray);
+      setRname(newRnameArray);
+      setLoading(false);
+    }
+    else{
+      setLoading(false);
+      setTimeout(resultAlert,100);
+      setRid(newRidArray);
+      setUid(newUidArray);
+      setRname(newRnameArray);
     }
 
-    setRid(newRidArray);
-    setUid(newUidArray);
-    setRname(newRnameArray);
+    
   }
 
     // 검색결과 로드맵 컴포넌트
@@ -75,7 +96,9 @@ const SearchPage = (props, {navigation}) => {
     return(
 
       <SafeAreaView style ={styles.container}>
-
+        <Spinner
+          visible = {loading}
+          textContent = {"검색 중..."}></Spinner>
         <View style = {{justifyContent : 'center', margin : 10, flexDirection : 'row'}}>
           <SearchBar
               lightTheme = 'true'

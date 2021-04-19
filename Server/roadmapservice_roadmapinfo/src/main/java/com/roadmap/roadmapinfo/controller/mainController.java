@@ -91,6 +91,7 @@ public class mainController {
 		
 		//query가 포함된 결과를 얻기 위해서 수정
 		query = "%" + query + "%";
+		System.out.println(query);
 		
 		try {
 			List<RoadmapDto> list = uMapper.getSearchRoadmap(query);
