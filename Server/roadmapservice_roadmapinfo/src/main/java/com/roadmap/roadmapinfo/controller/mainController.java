@@ -86,6 +86,7 @@ public class mainController {
 		
 	}
 	
+	// 검색결과 전송
 	@GetMapping(path = "/getsearchroadmap")
 	public List<RoadmapDto> getSearchRoadmap(@RequestParam String query){
 		
