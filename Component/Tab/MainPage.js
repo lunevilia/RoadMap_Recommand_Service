@@ -35,6 +35,8 @@ const MainPage = (props,{navigation}) => {
   const [userRoadmapId, setUserRoadmapId] = useState([]);
   const [ruid, setRuid] = useState([]);
 
+  const [viewState, setViewState] = useState("즐겨찾기");
+
   if(getbook == "0"){
     if (ip != null){
       getTopBook();
@@ -97,7 +99,7 @@ const MainPage = (props,{navigation}) => {
 
       const response = await axios.get("http://"+ip+":8081/gettopbook");
 
-      result = response.data;
+      let result = response.data;
 
       for (var i = 0; i<result.length; i++){
         newBookNameArray[i] = result[i].BNAME;
@@ -108,6 +110,16 @@ const MainPage = (props,{navigation}) => {
       getBookInfo(newBookNameArray);
     }catch(error){
       console.log(error);
+    }
+  }
+
+  //추천 로드맵 가져오기
+  async function getRecommandRoadmap(sort){
+    if(sort == 1){
+      alert(sort);
+    }
+    else if (sort == 2){
+      alert(sort);
     }
   }
 
@@ -186,7 +198,7 @@ const MainPage = (props,{navigation}) => {
 
   //사용자 좋아요 로드맵 컴포넌트화
   const userList = userRoadmap.map((userRoadmap, index) => 
-  (              
+  (            
     <TouchableOpacity key = {index} style = {styles.imageArea} onPress ={() =>{
       props.navigation.navigate("RoadMapSocial", {ruid : ruid[index], roadmap : userRoadmap, roadMapId : userRoadmapId[index], userId : userId, ip : ip});
     }}>
@@ -248,11 +260,14 @@ const MainPage = (props,{navigation}) => {
                 <View style = {{flexDirection : 'row'}}>
                   <TouchableOpacity style = {{justifyContent : 'center', margin : 10}} onPress = {() =>{
                       getloveroadmap();
+                      setViewState("즐겨찾기");
+                      console.log(viewState);
                     }}>
                     <Text style = {{color : 'blue', fontSize : 20}}>즐겨찾기</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style = {{justifyContent : 'center', margin : 10}} onPress = {() =>{
-                      
+                      setViewState("추천");
+                      console.log(viewState);
                     }}>
                     <Text style = {{color : 'blue', fontSize : 20}}>추천</Text>
                   </TouchableOpacity>
@@ -263,7 +278,43 @@ const MainPage = (props,{navigation}) => {
               <View style = {styles.roadMapArea} >
                 <Spinner visible = {loading} textContent = {""}></Spinner>
                   <ScrollView horizontal = {true}>
-                    {userList}
+                    {
+                     userRoadmap.length == 0
+                     ? ( viewState == "추천"
+                        ? <View style = {{justifyContent : 'center', alignContent : 'center', padding : 30, flexDirection : 'row'}}>
+                            <TouchableOpacity style = {styles.recommandButton} onPress = {() => {
+                              getRecommandRoadmap(1);
+                            }}>
+                              <Text style = {styles.recommandText}>추천 1</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style = {styles.recommandButton} onPress = {() => {
+                              getRecommandRoadmap(2);
+                            }}>
+                              <Text style = {styles.recommandText}>추천 2</Text>
+                            </TouchableOpacity>
+                          </View>
+                        : <View style = {{justifyContent : 'center', alignContent : 'center', padding : 30}}>
+                            <Text style = {{justifyContent : 'center', alignItems : 'center', fontSize : 20, fontWeight : 'bold', textAlign : 'center'}}>데이터가 없습니다</Text>
+                          </View>
+                     )
+                     : ( viewState == "즐겨찾기"
+                          ? userList
+                          : (
+                            <View style = {{justifyContent : 'center', alignContent : 'center', padding : 30, flexDirection : 'row'}}>
+                              <TouchableOpacity style = {styles.recommandButton} onPress = {() => {
+                                getRecommandRoadmap(1);
+                              }}>
+                                <Text style = {styles.recommandText}>추천 1</Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity style = {styles.recommandButton} onPress = {() => {
+                                getRecommandRoadmap(2);
+                              }}>
+                                <Text style = {styles.recommandText}>추천 2</Text>
+                              </TouchableOpacity>
+                            </View>
+                          )
+                     )
+                    }
                 </ScrollView>
               </View>
             </View>
@@ -308,6 +359,17 @@ const styles = StyleSheet.create({
     borderWidth : 3,
   },
 
+  recommandButton : {
+    borderColor : 'skyblue',
+    borderWidth : 2,
+    padding : 12,
+    margin : 12
+  },
+  recommandText : {
+    fontSize : 20,
+    fontWeight : 'bold',
+    textAlign : 'center',
+  },
   mindMapArea : {
     flex : 1,
     borderColor : 'skyblue',
@@ -323,6 +385,8 @@ const styles = StyleSheet.create({
   },
   roadMapArea : {
     flex : 1,
+    justifyContent : 'center',
+    alignItems : 'center',
     borderColor : 'lightgray',
     borderWidth : 1,
     paddingBottom : 10
