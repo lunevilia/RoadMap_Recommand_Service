@@ -15,16 +15,20 @@ const LoginPage = ({navigation}) => {
 
     const [ip, setIp] = useState();
     const [autoLogin, setAutoLogin] = useState();
-    const [userId, setUserId] = useState();
-    const [userPw, setUserPw] = useState();
 
     const [loading, setLoading] = useState(false);
+
+    const [loginCheck, setLoginCheck] = useState("0");
+
+    AsyncStorage.getItem("autoLogin").then((value) => {
+      console.log(value);
+    })
 
     AsyncStorage.getItem("ip").then((value) =>{
       setIp(value);
     });
 
-    AsyncStorage.getItem("userId").then((value) =>{
+    AsyncStorage.getItem("inputId").then((value) =>{
       if(value == null){
 
       }
@@ -32,25 +36,22 @@ const LoginPage = ({navigation}) => {
         setInputId(value);
       }
     });
-    AsyncStorage.getItem("userPw").then((value) =>{
+    AsyncStorage.getItem("inputPw").then((value) =>{
       if(value == null){
 
       }
       else{
-        setInputId(value);
+        setInputPw(value);
       }
     });
-
 
     AsyncStorage.getItem("autoLogin").then((value) => {
       
       if(value == "false"){
         setAutoLogin(false);
-        console.log("받아올떄false " + autoLogin);
       }
       else if(value == "true"){
         setAutoLogin(true);
-        console.log("받아올떄true " + autoLogin);
       }
     })
 
@@ -77,6 +78,13 @@ const LoginPage = ({navigation}) => {
         }
     }
 
+    if(loginCheck == "0"){
+      if(autoLogin == true){
+        setLoginCheck("1");
+        login();
+      }
+    }
+
     async function login(){
       setLoading(true);
         try{
@@ -90,6 +98,9 @@ const LoginPage = ({navigation}) => {
           let result = response.data
           
           if (result == "success") {
+
+            AsyncStorage.setItem("inputId", inputId);
+            AsyncStorage.setItem("inputPw", inputPw);
 
             navigation.dispatch(
                 StackActions.replace('main', {userId : inputId})

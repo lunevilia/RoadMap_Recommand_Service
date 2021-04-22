@@ -74,11 +74,15 @@ const MyPage = (props, {navigation}) => {
                 props.navigation.dispatch(
                   StackActions.replace('login'));
                   AsyncStorage.setItem("autoLogin", "false");
+                  AsyncStorage.removeItem("inputId");
+                  AsyncStorage.removeItem("inputPw");
               }
               else if (head == "로그아웃"){
                 props.navigation.dispatch(
                   StackActions.replace('login'));
                   AsyncStorage.setItem("autoLogin", "false");
+                  AsyncStorage.removeItem("inputId");
+                  AsyncStorage.removeItem("inputPw");
               }
             }}>
             <Text style={styles.actionText}>Yes</Text>
