@@ -55,6 +55,7 @@ const MainPage = (props,{navigation}) => {
     if(ip != null){
       getloveroadmap();
       setGetLoveRoadmap("1");
+      setLoading(false);
     }
   }
 
@@ -89,6 +90,7 @@ const MainPage = (props,{navigation}) => {
     }catch(error){
       console.log(error);
     }
+    console.log("love roadmap success");
     setLoading(false);
   }
 
