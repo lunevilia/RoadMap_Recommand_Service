@@ -28,9 +28,6 @@ const RoadMapSocial = (props, {navigation}) => {
   let [date, setDate] = useState([]);
   let [like, setLike] = useState(["",0]);
 
-  // 사용자 아이디와 로드맵 제작자 아이디 비교를 위한 변수, 수정삭제 권한 부여할떄 사용
-  let [RUID, setRUID] = useState();
-
   // menu opened option
   const [menuState, setMenuState] = useState(true);
 
@@ -65,12 +62,11 @@ const RoadMapSocial = (props, {navigation}) => {
         }
       });
       console.log(response.data);
-      setRUID(response.data);
-
-      if (userId == RUID) {
+      
+      if (userId == response.data) {
         setMenuState(false);
+        console.log("같다고....");
       }
-      console.log(userId + " " + RUID);
       console.log(menuState);
 
     } catch (error) {
