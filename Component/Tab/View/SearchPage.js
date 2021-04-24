@@ -46,7 +46,7 @@ const SearchPage = (props, {navigation}) => {
       }
     });
 
-    result = response.data;
+    const result = response.data;
 
     if(result.length != 0){
       for (var i = 0; i < result.length; i++){
