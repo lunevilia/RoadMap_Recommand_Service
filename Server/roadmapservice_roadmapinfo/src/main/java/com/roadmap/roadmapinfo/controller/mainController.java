@@ -104,30 +104,30 @@ public class mainController {
 		}
 		
 	}
-	
-	//추천 로드맵 가져오기
-	@GetMapping(path = "/getrecommandroadmap")
-	public List<RoadmapDto> getRecommandRoadmap(@RequestParam String userId, String type){
-		
-		try {
-			
-			List<RoadmapDto> list = null;
-			
-			if (type == "1") {				
-				list = uMapper.getRecommandRoadmap_1(userId);
-				System.out.println(list);
-				return list;
-			}
-			else if (type == "2") {
-				list = uMapper.getRecommandRoadmap_2(userId);
-				System.out.println(list);
-			}
-			
-			return list;
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+//	
+//	//추천 로드맵 가져오기
+//	@GetMapping(path = "/getrecommandroadmap")
+//	public List<RoadmapDto> getRecommandRoadmap(@RequestParam String userId, String type){
+//		
+//		try {
+//			
+//			List<RoadmapDto> list = null;
+//			
+//			if (type == "1") {				
+//				list = uMapper.getRecommandRoadmap_1(userId);
+//				System.out.println(list);
+//				return list;
+//			}
+//			else if (type == "2") {
+//				list = uMapper.getRecommandRoadmap_2(userId);
+//				System.out.println(list);
+//			}
+//			
+//			return list;
+//			
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 }

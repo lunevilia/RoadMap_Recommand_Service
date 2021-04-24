@@ -14,8 +14,4 @@ public interface UserMapper {
 	public String getUserId(int uid);
 
 	public List<RoadmapDto> getSearchRoadmap(String query);
-
-	public List<RoadmapDto> getRecommandRoadmap_1(String userId);
-
-	public List<RoadmapDto> getRecommandRoadmap_2(String userId);
 }
