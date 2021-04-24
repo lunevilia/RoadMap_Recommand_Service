@@ -1,44 +1,82 @@
 import React, {useState} from "react";
 import {StyleSheet, Text, ScrollView, View,TouchableOpacity,Image} from "react-native";
+import {SearchBar} from 'react-native-elements';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const NoticePage = ({navigation}) => {
+const NoticePage = (props,{navigation}) => {
+
+  const userId = props.userId;
+
+    // App.js ip 받아오기
+    const [ip,setIp] = useState();
+    AsyncStorage.getItem("ip").then((value) => {
+      setIp(value);
+    });
 
   const [noticeName, noticeNameModified] = useState(['자유게시판', '조언방', '토론방', '질문방'])
 
   return(
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+
+            {/* 사용자 정보 및 검색창 */}
+            <View style = {{margin : 10}}>
+            <View style = {{flexDirection : 'row', justifyContent : 'space-between'}}>
+                <TouchableOpacity style = {{flexDirection : 'row', flex : 1}} onPress = {() =>{
+                  props.navigation.navigate("MyPage", {userId : userId, ip : ip})
+                }}>
+                  <Image style = {{width : 50, height : 50, padding : 10}} source ={require("../img/user.png")}></Image>
+                  <Text style = {styles.userName}>{userId}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style = {{flex : 1, justifyContent : 'center', marginLeft : 10, marginRight : 10}} onPress = {() => {
+                  props.navigation.navigate("SearchPage", {userId : userId, ip : ip})
+                }}>
+                  <SearchBar
+                    lightTheme = 'true'
+                    round = "true"
+                    platform = "android"
+                    disabled = "true"
+                    leftIconContainerStyle = {{marginRight : "80%"}}
+                    containerStyle = {{backgroundColor : 'white', height : 'auto', borderWidth : 1, borderRadius : 10, borderColor : 'gray'}}
+                    inputContainerStyle = {{backgroundColor : 'white', height : 20}}>
+                  </SearchBar>
+                </TouchableOpacity>
+
+              </View>
+          </View>
+
         <View style={styles.top}>
         <Text style={styles.category_subtitle}>게시판 목록</Text>
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            navigation.navigate("NoticePage", {noticeName : noticeName[0]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[0]})
           }}>
             <Image style={styles.image} source={require('../img/1.png')} />
              <Text style={styles.category_button}>자유 게시판</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            navigation.navigate("NoticePage", {noticeName : noticeName[1]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[1]})
           }}>
             <Image style={styles.image} source={require('../img/2.png')} />
              <Text style={styles.category_button}>조언방</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            navigation.navigate("NoticePage", {noticeName : noticeName[2]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[2]})
           }}>
               <Image style={styles.image} source={require('../img/3.png')} />
              <Text style={[styles.category_button, {marginLeft: 14}]}>토론방</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            navigation.navigate("NoticePage", {noticeName : noticeName[3]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[3]})
           }}>
             <Image style={styles.image} source={require('../img/4.png')} />
              <Text style={styles.category_button}>질문방</Text>
             </TouchableOpacity>
             
       </View>
-    </ScrollView>
+    </View>
 
   );
 }
@@ -49,6 +87,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column', // row
     backgroundColor: 'white',
+  },
+  userName : {
+    fontSize : 30,
+    fontWeight : 'bold',
+    padding : 10
   },
   top: {
     flex: 1,
