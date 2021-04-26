@@ -16,6 +16,10 @@
     	INSERT INTO USERCOMMENT(RID, UID, UCOMMENT, UDATE) values (#{rid}, #{uid}, #{ucomment}, #{udate}) 
     </insert>
     
+    <insert id = "insertViewCount" parameterType = "string">
+    	INSERT INTO ROADMAPCOUNT(UID, RID) values (#{uid}, #{rid})
+    </insert>
+    
     <delete id="deleteComment" parameterType = "commentDto">
     	DELETE FROM USERCOMMENT WHERE UID=(#{uid}) and UDATE = (#{udate})
     </delete>

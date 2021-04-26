@@ -26,6 +26,17 @@ public class BoardController {
 		return list;
 	}
 	
+	@GetMapping(path = "/insertviewcount")
+	public void insertViewCount(@RequestParam String userId, String rid) {
+		try {
+
+			boardMapper.insertViewCount(userId,rid);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@GetMapping(path = "/insertcomment")
 	public String insertComment(@RequestParam int rid, String uid, String ucomment, String udate) {
 		

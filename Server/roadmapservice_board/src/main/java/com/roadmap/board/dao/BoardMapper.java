@@ -10,6 +10,8 @@ public interface BoardMapper {
 
 	public void insertComment(CommentDto commentDto);
 	
+	public void insertViewCount(String uid, String rid);
+	
 	public void deleteComment(CommentDto commentDto);
 	
 	public String getLoveCount(int rid);

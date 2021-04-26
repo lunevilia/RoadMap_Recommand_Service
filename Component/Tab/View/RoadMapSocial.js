@@ -53,6 +53,19 @@ const RoadMapSocial = (props, {navigation}) => {
     }
   }
 
+  async function insertViewCount(){
+    try{
+      const response = await axios.get("http://" + ip + ":8082/insertviewcount",{
+        params : {
+          userId : userId,
+          rid : roadMapId
+        }
+      });
+    }catch(error){
+      console.log(error);
+    }
+  }
+
   //ruid 변환
   async function getRuid(){
     try {
