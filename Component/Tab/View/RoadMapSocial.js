@@ -49,10 +49,12 @@ const RoadMapSocial = (props, {navigation}) => {
       getLikeInfo();
       getRuid();
       setGetData("1");
+      insertViewCount();
       setLoading(false);
     }
   }
 
+  //조회수 추가
   async function insertViewCount(){
     try{
       const response = await axios.get("http://" + ip + ":8082/insertviewcount",{

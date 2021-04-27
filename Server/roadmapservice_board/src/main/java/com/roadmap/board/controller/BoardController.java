@@ -30,7 +30,8 @@ public class BoardController {
 	public void insertViewCount(@RequestParam String userId, String rid) {
 		try {
 
-			boardMapper.insertViewCount(userId,rid);
+			String uid = boardMapper.getUid(userId);
+			boardMapper.insertViewCount(uid,rid);
 			
 		}catch(Exception e) {
 			e.printStackTrace();
