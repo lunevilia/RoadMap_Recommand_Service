@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default function App() {
 
+  // 서버 고유 ip주소 기입
   AsyncStorage.setItem('ip', '');
   AsyncStorage.setItem('autoLogin', "false");
 
