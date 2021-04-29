@@ -321,6 +321,13 @@ const MainPage = (props,{navigation}) => {
               </View>
             </View>
 
+          {/* 비슷한 사용자의 인기 로드맵 */}
+          <View style = {styles.rankArea}>
+            <Text style = {styles.rankName}>직장인의 눈</Text>
+                  <View style = {styles.roadMapRankArea}>
+                    {roadMapList}
+                  </View>
+          </View>
 
           {/* 인기 책순위  */}
           <View style = {styles.rankArea} >
@@ -334,13 +341,6 @@ const MainPage = (props,{navigation}) => {
 
           <View style = {styles.line}></View>
 
-          {/* 인기 로드맵 */}
-          <View style = {styles.rankArea}>
-            <Text style = {styles.rankName}>인기 로드맵</Text>
-                  <View style = {styles.roadMapRankArea}>
-                    {roadMapList}
-                  </View>
-          </View>
 
       </ScrollView>
     </SafeAreaView>
