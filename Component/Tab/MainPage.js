@@ -161,7 +161,7 @@ const MainPage = (props,{navigation}) => {
     console.log("success");
   }
 
-  //로드맵 순위 가져오기
+  //로드맵 순위 가져오기 => 클러스터링 로드맵 순위로 번경해야함
   async function getTopRoadmap(){
     try{
       var newRoadmapArray = [...roadmap];
@@ -329,6 +329,8 @@ const MainPage = (props,{navigation}) => {
                   </View>
           </View>
 
+          <View style = {styles.line}></View>
+
           {/* 인기 책순위  */}
           <View style = {styles.rankArea} >
 
@@ -339,7 +341,7 @@ const MainPage = (props,{navigation}) => {
             </ScrollView>
           </View>
 
-          <View style = {styles.line}></View>
+          
 
 
       </ScrollView>
@@ -358,7 +360,7 @@ const styles = StyleSheet.create({
 
   line : {
     borderColor : 'lightgray',
-    borderWidth : 3,
+    borderWidth : 2,
   },
 
   recommandButton : {
