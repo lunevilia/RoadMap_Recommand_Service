@@ -27,14 +27,14 @@ public class mainController {
 		return "success";
 	}
 	
-	@GetMapping(path = "/gettoprank")
-	public List<RankDto> getTopRank() {
-		
-		List<RankDto> list = uMapper.getTopRank();
-		System.out.println(list);
-
-		return list;
-	}
+//	@GetMapping(path = "/gettoprank")
+//	public List<RankDto> getTopRank() {
+//		
+//		List<RankDto> list = uMapper.getTopRank();
+//		System.out.println(list);
+//
+//		return list;
+//	}
 	
 	@GetMapping(path = "/gettopbook")
 	public List<BookRankDto> getTopBook(){
