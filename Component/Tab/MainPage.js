@@ -90,7 +90,6 @@ const MainPage = (props,{navigation}) => {
     }catch(error){
       console.log(error);
     }
-    console.log("love roadmap success");
     setLoading(false);
   }
 
@@ -108,7 +107,6 @@ const MainPage = (props,{navigation}) => {
       }
 
       setBookName(newBookNameArray);
-      console.log("book success");
       getBookInfo(newBookNameArray);
     }catch(error){
       console.log(error);
