@@ -76,11 +76,9 @@ const RoadMapSocial = (props, {navigation}) => {
           ruid : ruid
         }
       });
-      console.log(response.data);
       
       if (userId == response.data) {
         setMenuState(false);
-        console.log("같다고....");
       }
       console.log(menuState);
 
@@ -188,7 +186,6 @@ const RoadMapSocial = (props, {navigation}) => {
           udate : date
         }
       });
-      console.log(response.data[0]);
     }catch(error){
       console.log(error);
     }
@@ -278,8 +275,6 @@ const RoadMapSocial = (props, {navigation}) => {
           uid : userId
         }
       });
-
-      console.log(response.data);
     }catch(error){
       console.log(error);
     }

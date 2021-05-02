@@ -129,8 +129,6 @@ const MainPage = (props,{navigation}) => {
     var newSrcArray = [...bookSrc];
     var newUrlArray = [...bookUrl];
 
-    console.log(bookarray);
-
     for(var i = 0; i<bookName.length; i++){
       try {
         const response = await axios.get("https://dapi.kakao.com/v3/search/book?",{
@@ -156,7 +154,6 @@ const MainPage = (props,{navigation}) => {
   
     setBookSrc(newSrcArray);
     setBookUrl(newUrlArray);
-    console.log("success");
   }
 
   //로드맵 순위 가져오기 => 클러스터링 로드맵 순위로 번경해야함
@@ -176,8 +173,7 @@ const MainPage = (props,{navigation}) => {
       setRoadMap(newRoadmapArray);
       setRoadMapId(newRoadmapIdArray);
       setRoadmapUid(newRoadmapUIDArray);
-
-      console.log("roadmap success");
+      
     } catch(error){
       console.error(error);
     }
