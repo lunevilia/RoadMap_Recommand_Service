@@ -28,8 +28,6 @@ const MainPage = (props,{navigation}) => {
   const [roadmapUid, setRoadmapUid] = useState(["-","-","-","-","-"])
 
   const [getbook, setGetBook] = useState(["0"]);
-  const [getrank, setGetRank] = useState(["0"]);
-  const [getroadmap, setGetLoveRoadmap] = useState(["0"]);
 
   const [userRoadmap, setUserRoadmap] = useState([]);
   const [userRoadmapId, setUserRoadmapId] = useState([]);
@@ -40,21 +38,9 @@ const MainPage = (props,{navigation}) => {
   if(getbook == "0"){
     if (ip != null){
       getTopBook();
-      setGetBook("1");
-    }
-  }
-
-  if(getrank == "0"){
-    if(ip != null){
       getTopRoadmap();
-      setGetRank("1");
-    }
-  }
-
-  if(getroadmap == "0"){
-    if(ip != null){
       getloveroadmap();
-      setGetLoveRoadmap("1");
+      setGetBook("1");
       setLoading(false);
     }
   }
@@ -334,10 +320,6 @@ const MainPage = (props,{navigation}) => {
                 {bookList}
             </ScrollView>
           </View>
-
-          
-
-
       </ScrollView>
     </SafeAreaView>
 
