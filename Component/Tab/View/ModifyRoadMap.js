@@ -1,12 +1,21 @@
 import React, {Component, useState} from 'react';
-import {Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList} from 'react-native';
+import {Button, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList} from 'react-native';
 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'; // width, height
 import{Menu, MenuOption, MenuOptions,MenuTrigger, MenuProvider} from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import TreeView from 'react-native-final-tree-view';
 
+import Cytoscape from 'cytoscape';
+import CytoscapeComponent from 'react-cytoscapejs';
+import COSEBilkent from 'cytoscape-cose-bilkent';
+
+Cytoscape.use(COSEBilkent);
+
 const ModifyRoadMap = (props, {navigation}) => {
+    const [numKey, setnumKey] = useState(0);
+
+    const [Viewstate, setViewstate] = useState(true);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalBooksid, setBooksid] = useState(null);
@@ -16,37 +25,37 @@ const ModifyRoadMap = (props, {navigation}) => {
     let roadmap = props.route.params.roadmap;
 
     const state = {
-      data: [
+      triz: [
         {
           key : 0,
           id: 'root',
-          name: 'root',
+          label: 'root',
           texts : '뿌리 내용',
           children: [
             {
               key : 1,
               id: 'child1',
-              name: 'child1',
+              label: 'child1',
               texts : '줄기 내용',
               children: [
                 {
                   key : 3,
                   id: 'stem1',
-                  name: 'child11',
+                  label: 'stem1',
                   texts : '가지 내용1',
                   children: [
                     {
                       key : 4,
                       id: 'leaf1',
-                      name: 'child111',
+                      label: 'leaf1',
                       texts : '잎사귀',
                     },
                   ],
                 },
                 {
                   key : 2,
-                  id: 'child12',
-                  name: 'child12',
+                  id: 'stem2',
+                  label: 'stem2',
                   texts : '가지 내용2',
                 },
               ],
@@ -55,6 +64,20 @@ const ModifyRoadMap = (props, {navigation}) => {
         },
       ],
     };
+
+    
+    const data = [
+      { data: state.triz[0]},
+      { data: state.triz[0].children[0]},
+      { data: state.triz[0].children[0].children[0]},
+      { data: state.triz[0].children[0].children[1]},
+      { data: state.triz[0].children[0].children[0].children[0]},
+      { data: { source: 'root', target: 'child1', label: 'Edge from Node1 to Node2' } },
+      { data: { source: 'child1', target: 'stem1', label: 'Edge from Node1 to Node2' } },
+      { data: { source: 'child1', target: 'stem2', label: 'Edge from Node1 to Node2' } },
+      { data: { source: 'stem1', target: 'leaf1', label: 'Edge from Node1 to Node2' } },
+   ];
+
     const [bookUrl, setBookUrl] = useState(["https://www.naver.com"]);
     const [bookSrc, setBookSrc] = useState(["https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg","https://bookthumb-phinf.pstatic.net/cover/166/834/16683411.jpg"]);
     const Books = [
@@ -95,13 +118,14 @@ const ModifyRoadMap = (props, {navigation}) => {
 
     const renderListItem = ({item}) =>{
       // <Text style = {styles.bookmark}>{item}</Text>
-      return (<TouchableOpacity style = {styles.imageArea} onPress ={() =>{
+      return (
+      <TouchableOpacity onPress ={() =>{
         Linking.openURL(bookUrl[0])
       }}>
         <Image style = {styles.images} source = {{uri : bookSrc[0]}}></Image> 
         <Text style = {styles.imageName}>{item}</Text>
-      </TouchableOpacity>)
-    }
+      </TouchableOpacity>
+      )}
 
 
     return(
@@ -116,61 +140,116 @@ const ModifyRoadMap = (props, {navigation}) => {
 
               <View style = {styles.top}>
           
-                {/* 더보기 */}
-                  <View style = {{flexDirection : 'row', flex : 1}}>
-                    <View style = {{flex : 7}}></View>
-                    <View style = {{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
-                      <TouchableOpacity style = {{alignSelf : "flex-start"}}>
-                        <Text>아이고</Text>
-                      </TouchableOpacity>
-                        <Menu>
-                          <MenuTrigger style = {{margin : 10}}> 
-                            <Icon name='ellipsis-vertical'size={30} color="black"></Icon>
-                          </MenuTrigger>
-                          <MenuOptions>
-                            <MenuOption onSelect={() => alert('save')} text='수정'></MenuOption>
-                            <MenuOption onSelect={() => alert('delete')} text='삭제'></MenuOption>
-                          </MenuOptions>
-                        </Menu>
+                {/* 뷰 형식 선택 && 더보기 */}
+                  <View style = {{flexDirection : 'column', flex : 1}}>
+                    <View style = {{flex : 1, flexDirection : 'row', justifyContent: 'space-between'}}>
+                      {/* 뷰 선택 */}
+                      {Viewstate ? 
+                      (
+                      <View style = {{flex : 1.5, justifyContent : 'center', alignItems : 'center', flexDirection : 'row'}}>
+                        <TouchableOpacity style = {styles.clickicons}>
+                          <Icon name='list'size={25} color="white"></Icon> 
+                        </TouchableOpacity>
+                        <TouchableOpacity style = {styles.nonclickicons} onPress = {() => {setViewstate(!Viewstate)}}>
+                          <Icon name='share-social-outline'size={25} color="#0067A3"></Icon> 
+                        </TouchableOpacity>
+                      </View>
+                      ) 
+                      : 
+                      (
+                      <View style = {{flex : 1.5, justifyContent : 'center', alignItems : 'center', flexDirection : 'row'}}>
+                        <TouchableOpacity style = {styles.nonclickicons} onPress = {() => {setViewstate(!Viewstate)}}>
+                          <Icon name='list'size={25} color="#0067A3"></Icon> 
+                        </TouchableOpacity>
+                        <TouchableOpacity style = {styles.clickicons}>
+                          <Icon name='share-social-outline'size={25} color="white"></Icon> 
+                        </TouchableOpacity>
+                      </View>
+                      )}
+                      
+
+
+                      <View style = {{flex : 5, justifyContent : 'center', alignItems : 'center'}}>
+                      </View>
+
+                      {/* 더보기 */}
+                      <View style = {{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
+                          <Menu>
+                            <MenuTrigger style = {{margin : 10}}> 
+                              <Icon name='ellipsis-vertical'size={30} color="black"></Icon>
+                            </MenuTrigger>
+                            <MenuOptions>
+                              <MenuOption onSelect={() => alert('save')} text='수정'></MenuOption>
+                              <MenuOption onSelect={() => alert('delete')} text='삭제'></MenuOption>
+                            </MenuOptions>
+                          </Menu>
+                      </View>
                     </View>
+                    
                   </View>
 
-                  {/* 로드맵 줄 */}
+                {/* 로드맵 줄 */}
                   
-                  <View style = {styles.scrolls}>
-                    <TreeView
-                      data={state.data}
-                      renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
-                        return (
-                          <View style={{
-                            flexDirection: 'row',
-                          }}>
-                            <Text
-                              style={{
-                                marginLeft: 25 * level,
-                                fontSize: 18,
-                                backgroundColor : "white",
-                                color : "black",
-                              }}>
-                              {getIndicator(isExpanded, hasChildrenNodes)} {node.name}
-                            </Text>
-                            <View style={{flex: 3, height: 1, backgroundColor: 'white', alignItems: 'center'}} />
-                            <View
-                              style={{
-                                borderBottomColor: 'white',
-                                borderBottomWidth: 1,
-                              }}
-                            />
-                          </View>
-                        )
-                      }}
+                <View style = {styles.scrolls}>
 
-                      onNodeLongPress={({node, level})=> {
-                        setBooksKey(node.key);
-                        setBooksid(node.id);
-                        setModalVisible(true);
-                      }}
-                    />
+                  {Viewstate ? 
+                      (
+                      <TreeView
+                        data={state.triz}
+                        renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
+                          return (
+                            <View style={{
+                              flexDirection: 'column',
+                            }}>
+                              <Text
+                                style={{
+                                  height : 25,
+                                  marginLeft: 25 * level,
+                                  marginBottom : 10,
+                                  marginTop : 3,
+                                  fontSize: 20,
+                                  color : "black",
+                                }}>
+                                {getIndicator(isExpanded, hasChildrenNodes)} {node.label}
+                              </Text>
+                            </View>
+                          )
+                        }}
+  
+                        onNodeLongPress={({node, level})=> {
+                          setBooksKey(node.key);
+                          setBooksid(node.id);
+                          setModalVisible(true);
+                        }}
+                      />
+                      ) 
+                      : 
+                      (
+                        <CytoscapeComponent stylesheet={[
+                          {
+                            selector: 'node',
+                            style: {
+                              width: 20,
+                              height: 20,
+                            }
+                          },
+                          
+                          {
+                            selector: 'edge',
+                            style: {
+                              width: 3
+                            }
+                          }
+                        ]} 
+                        elements={data} 
+                        minZoom={0.5} maxZoom={5} 
+                        style={ { width : wp("80%"), height : hp("80%"), } } 
+                        layout = {{
+                          name: 'cose-bilkent',
+                        }}
+                        />
+                      )}
+                    
 
                     {/* Modal 모달 부분 */}
                     <Modal
@@ -183,35 +262,38 @@ const ModifyRoadMap = (props, {navigation}) => {
                     >
                       <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                        {modalBooksid ?
-                        (
-                          <View>
-                            <Text style = {{fontSize : 18, fontWeight : 'bold', alignSelf : "center"}}>{Books[modalBooksKey].id}</Text>
-                          <FlatList
-                            data={Books[modalBooksKey].name}
-                            numColumns={3}
-                            renderItem={renderListItem}
-                          />
-                          </View>
-                          
-                        )
-                        :
-                        (<Text>modalBooksid 거짓인 경우</Text>)
-                        }
-                         <View style = {{flexDirection : "row"}}>
-                          <TouchableOpacity
-                            style={[styles.button, styles.buttonOpen]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                          >
-                            <Text style={styles.textStyle}>수정</Text>
-                          </TouchableOpacity>
+                          {modalBooksid ?
+                          (
+                            <View style = {{borderColor : "black", borderWidth : 2}}>
+                              <Text style = {{fontSize : 18, fontWeight : 'bold', alignSelf : "center"}}>{Books[modalBooksKey].id}</Text>
+                              <View>
+                                <FlatList
+                                  data={Books[modalBooksKey].name}
+                                  numColumns={3}
+                                  renderItem={renderListItem}
+                                />
+                              </View>
+                            </View>
+                            
+                          )
+                          :
+                          (<Text>modalBooksid 거짓인 경우</Text>)
+                          }
 
-                          <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                          >
-                            <Text style={styles.textStyle}>삭제</Text>
-                          </TouchableOpacity>
+                          <View style = {{flexDirection : "row"}}>
+                            <TouchableOpacity
+                              style={[styles.button, styles.buttonOpen]}
+                              onPress={() => setModalVisible(!modalVisible)}
+                            >
+                              <Text style={styles.textStyle}>수정</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                              style={[styles.button, styles.buttonClose]}
+                              onPress={() => setModalVisible(!modalVisible)}
+                            >
+                              <Text style={styles.textStyle}>삭제</Text>
+                            </TouchableOpacity>
                           </View>
                         </View>
                       </View>
@@ -223,7 +305,7 @@ const ModifyRoadMap = (props, {navigation}) => {
 
                   {/* 수정하기 */}
                   <Text>
-                      어떻게 나오는지 확인하기 위한 텍스트
+                      어떻게 나오는지 확인하기 위한 텍스트 {typeof(data.label)}
                   </Text>
             </View>
             <View style = {styles.EditView}>
@@ -247,7 +329,6 @@ const ModifyRoadMap = (props, {navigation}) => {
           </View>
         </SafeAreaView>
         <View>
-          
         </View>
       </MenuProvider>
 
@@ -289,7 +370,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
     backgroundColor: "#2196F3",
@@ -309,20 +390,6 @@ const styles = StyleSheet.create({
     justifyContent : "space-between",
     flexDirection : "row",
   },
-  row: {
-    padding: 15,
-    marginBottom: 5,
-    backgroundColor: 'skyblue',
-  },
-  rowDark: {
-    padding: 15,
-    marginBottom: 5,
-    backgroundColor: 'steelblue',
-  },
-  mindmaps : {
-    height : hp("55%"),
-    width: wp("80%"),
-  },
   top : {
     flex : 1,
   },
@@ -330,7 +397,6 @@ const styles = StyleSheet.create({
     flex : 9, 
     justifyContent : 'center', 
     alignItems : 'center',
-    backgroundColor : 'black',
 
   },
   centeredView: {
@@ -339,10 +405,11 @@ const styles = StyleSheet.create({
     marginTop: 22
   },
   modalView: {
+    flexDirection : "column",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 20,
+    padding: 10,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -370,7 +437,7 @@ const styles = StyleSheet.create({
   },
   images : {
     height : 150,
-    width : 100,
+    width : 90,
     margin : 10,
     borderColor : 'lightgray',
     borderWidth : 1
@@ -380,6 +447,16 @@ const styles = StyleSheet.create({
     fontWeight : 'normal',
     textAlign : 'center',
   },
+  clickicons : {
+    backgroundColor : "#696969",
+    borderColor : "black",
+    borderWidth : 1
+  },
+  nonclickicons : {
+    backgroundColor : "white",
+    borderColor : "black",
+    borderWidth : 1
+  }
 });
 
 export default ModifyRoadMap;
