@@ -256,9 +256,6 @@ const RoadMap = (props, {navigation}) => {
                         {myStem[mylevel].title}
                         and {callStem}
                       </Text>
-                        {/* <SectionList
-                        sections = {stemList[]}
-                        /> */}
                         <SectionList
                           sections={myStem}
                           renderSectionHeader={renderStemHeader}
