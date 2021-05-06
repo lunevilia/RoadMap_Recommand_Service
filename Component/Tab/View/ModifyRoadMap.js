@@ -1,5 +1,5 @@
 import React, {Component, useState} from 'react';
-import {Button, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList} from 'react-native';
+import {TextInput, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList} from 'react-native';
 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'; // width, height
 import{Menu, MenuOption, MenuOptions,MenuTrigger, MenuProvider} from 'react-native-popup-menu';
@@ -21,6 +21,8 @@ const ModifyRoadMap = (props, {navigation}) => {
     const [modalBooksid, setBooksid] = useState(null);
     const [modalBooksKey, setBooksKey] = useState(null);
 
+    const [secondmodalVisible, setsecondmodalVisible] = useState(false);
+
     let roadMapId = props.route.params.roadMapId;
     let roadmap = props.route.params.roadmap;
 
@@ -30,34 +32,82 @@ const ModifyRoadMap = (props, {navigation}) => {
           key : 0,
           id: 'root',
           label: 'root',
-          texts : '뿌리 내용',
+          texts : '웹 백엔드',
           children: [
             {
               key : 1,
               id: 'child1',
               label: 'child1',
-              texts : '줄기 내용',
+              texts : 'HTML CSS JS',
               children: [
                 {
                   key : 3,
                   id: 'stem1',
                   label: 'stem1',
-                  texts : '가지 내용1',
+                  texts : 'Jquery',
                   children: [
+
                     {
                       key : 4,
                       id: 'leaf1',
                       label: 'leaf1',
-                      texts : '잎사귀',
+                      texts : 'JAVA',
+                      children: [
+                        {
+                          key : 6,
+                          id: 'stem1',
+                          label: 'stem1',
+                          texts : 'Spring',
+                        },
+                      ],
                     },
+
                   ],
                 },
                 {
                   key : 2,
                   id: 'stem2',
                   label: 'stem2',
-                  texts : '가지 내용2',
+                  texts : 'GITHUB',
                 },
+
+                {
+                  key : 5,
+                  id: 'stem2',
+                  label: 'stem2',
+                  texts : 'MySQL',
+                  children: [
+                    {
+                      key : 6,
+                      id: 'stem1',
+                      label: 'stem1',
+                      texts : 'MariaDB',
+                      children: [
+                        {
+                          key : 6,
+                          id: 'stem1',
+                          label: 'stem1',
+                          texts : 'REST JSON AUTH',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  key : 7,
+                  id: 'stem2',
+                  label: 'stem2',
+                  texts : 'PHP',
+                  children: [
+                    {
+                      key : 8,
+                      id: 'stem1',
+                      label: 'stem1',
+                      texts : 'Apache',
+                    },
+                  ],
+                },
+
               ],
             },
           ],
@@ -127,6 +177,26 @@ const ModifyRoadMap = (props, {navigation}) => {
       </TouchableOpacity>
       )}
 
+    const renderUpdateList = ({item}) =>{
+      return(
+        <View>
+          <TouchableOpacity onPress ={() =>{
+          }}>
+            <Image style = {styles.images}></Image>
+            <TextInput style = {styles.imageName} defaultValue={item} inputProps={{ 'aria-label': 'description' }} />
+          </TouchableOpacity>
+          <TextInput defaultValue="Hello world" inputProps={{ 'aria-label': 'description' }} />
+        </View>
+        
+        
+      )
+    }
+
+    // 모달 수정클릭 이벤트
+    const updateModalView = () => {
+      setModalVisible(!modalVisible);
+      setsecondmodalVisible(!secondmodalVisible);
+    }
 
     return(
       <MenuProvider>
@@ -194,6 +264,7 @@ const ModifyRoadMap = (props, {navigation}) => {
 
                   {Viewstate ? 
                       (
+                        // 리스트 형식
                       <TreeView
                         data={state.triz}
                         renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
@@ -203,14 +274,13 @@ const ModifyRoadMap = (props, {navigation}) => {
                             }}>
                               <Text
                                 style={{
-                                  height : 25,
+                                  height : 20 ,
                                   marginLeft: 25 * level,
-                                  marginBottom : 10,
                                   marginTop : 3,
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   color : "black",
                                 }}>
-                                {getIndicator(isExpanded, hasChildrenNodes)} {node.label}
+                                {getIndicator(isExpanded, hasChildrenNodes)} {node.texts}
                               </Text>
                             </View>
                           )
@@ -225,6 +295,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                       ) 
                       : 
                       (
+                        // 그래프 형식
                         <CytoscapeComponent stylesheet={[
                           {
                             selector: 'node',
@@ -264,13 +335,61 @@ const ModifyRoadMap = (props, {navigation}) => {
                         <View style={styles.modalView}>
                           {modalBooksid ?
                           (
-                            <View style = {{borderColor : "black", borderWidth : 2}}>
+                            <View style = {{borderColor : "black", borderWidth : 2, height : hp("30%"), marginTop: 10, marginBottom : 10}}>
                               <Text style = {{fontSize : 18, fontWeight : 'bold', alignSelf : "center"}}>{Books[modalBooksKey].id}</Text>
+                              <ScrollView horizontal = {true}>
+                                <FlatList
+                                  data={Books[modalBooksKey].name}
+                                  renderItem={renderListItem}
+                                />
+                              </ScrollView>
+                            </View>
+                            
+                          )
+                          :
+                          (<Text>modalBooksid 거짓인 경우</Text>)
+                          }
+
+                          <View style = {{flexDirection : "row"}}>
+                            <TouchableOpacity
+                              style={[styles.button, styles.buttonOpen]}
+                              onPress={() => updateModalView()}
+                            >
+                              <Text style={styles.textStyle}>수정</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                              style={[styles.button, styles.buttonClose]}
+                              onPress={() => setModalVisible(!modalVisible)}
+                            >
+                              <Text style={styles.textStyle}>취소</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+                    </Modal>
+
+
+                    {/* 수정하기 두번째 modal */}
+                    <Modal
+                      animationType="fade"
+                      transparent={true}
+                      visible={secondmodalVisible}
+                      onRequestClose={() => {
+                        setsecondmodalVisible(!secondmodalVisible)
+                      }}
+                    >
+                      <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                          {modalBooksid ?
+                          (
+                            <View style = {{borderColor : "black", borderWidth : 2, height : hp("30%"), marginTop: 10, marginBottom : 10}}>
+                              <TextInput defaultValue={Books[modalBooksKey].id} inputProps={{ 'aria-label': 'description' }} />
                               <View>
                                 <FlatList
                                   data={Books[modalBooksKey].name}
                                   numColumns={3}
-                                  renderItem={renderListItem}
+                                  renderItem={renderUpdateList}
                                 />
                               </View>
                             </View>
@@ -283,22 +402,21 @@ const ModifyRoadMap = (props, {navigation}) => {
                           <View style = {{flexDirection : "row"}}>
                             <TouchableOpacity
                               style={[styles.button, styles.buttonOpen]}
-                              onPress={() => setModalVisible(!modalVisible)}
+                              onPress={() => updateModalView()}
                             >
-                              <Text style={styles.textStyle}>수정</Text>
+                              <Text style={styles.textStyle}>확인</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
                               style={[styles.button, styles.buttonClose]}
-                              onPress={() => setModalVisible(!modalVisible)}
+                              onPress={() => updateModalView()}
                             >
-                              <Text style={styles.textStyle}>삭제</Text>
+                              <Text style={styles.textStyle}>취소</Text>
                             </TouchableOpacity>
                           </View>
                         </View>
                       </View>
                     </Modal>
-
                 </View>  
                 
               </View>
@@ -308,24 +426,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                       어떻게 나오는지 확인하기 위한 텍스트 {typeof(data.label)}
                   </Text>
             </View>
-            <View style = {styles.EditView}>
-              <TouchableOpacity style = {styles.EditItems}>
-                  <Image style={styles.image} source={require('../../img/circle-node.png')} />
-                </TouchableOpacity>
 
-                <TouchableOpacity style = {styles.EditItems}>
-                  <Image style={styles.image} source={require('../../img/line.png')} />
-                </TouchableOpacity>
-
-                <TouchableOpacity style = {styles.EditItems}>
-                  <Image style={styles.image} source={require('../../img/view-details.png')} />
-                </TouchableOpacity>
-
-                <TouchableOpacity style = {styles.EditItems}>
-                  <Image style={styles.image} source={require('../../img/delete.png')} />
-                </TouchableOpacity>
-                
-            </View>
           </View>
         </SafeAreaView>
         <View>
@@ -344,7 +445,7 @@ const styles = StyleSheet.create({
     alignItems : "center",
   },
   roadview : {
-    height : hp("60%"),
+    height : hp("85%"),
     width : wp("90%"),
     backgroundColor : "#BFC8D7",
     elevation : 3,
@@ -402,14 +503,14 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
-    marginTop: 22
+    marginTop: 30,
   },
   modalView: {
     flexDirection : "column",
-    margin: 20,
+    margin: 10,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 10,
+    paddingBottom : 80,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -418,7 +519,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   bookmark : {
     alignItems: "center",
@@ -456,7 +557,10 @@ const styles = StyleSheet.create({
     backgroundColor : "white",
     borderColor : "black",
     borderWidth : 1
-  }
+  },
+  UpdateInput : {
+    
+  },
 });
 
 export default ModifyRoadMap;
