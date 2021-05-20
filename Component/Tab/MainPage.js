@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
+import {Modal,StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView,Image, View, Linking} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -18,6 +18,7 @@ const MainPage = (props,{navigation}) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // const userId = props.route.params.userId;
   var [bookName, setBookName] = useState(["-", "-", "-", "-", "-"]);
@@ -34,14 +35,42 @@ const MainPage = (props,{navigation}) => {
   const [ruid, setRuid] = useState([]);
 
   const [viewState, setViewState] = useState("즐겨찾기");
+  const [foot, setFoot] = useState("다음");
+  const [cnt, setCnt] = useState(1);
 
   if(getbook == "0"){
     if (ip != null){
+      checkUserInterest();
       getTopBook();
       getTopRoadmap();
       getloveroadmap();
       setGetBook("1");
       setLoading(false);
+    }
+  }
+
+  // 흥미분야 검사
+  async function checkUserInterest(){
+    try{
+      const response = await axios.get("http://192.168.35.115:8000/checkuserinterest",{
+        params : {
+          userId : userId
+        }
+      });
+      
+      const result = response.data;
+
+      console.log(result);
+
+      //result가 null이라면, 검사 페이지로 이동
+      if(result == 0){
+        setModalVisible(true);
+        console.log("검사시작");
+      }
+      //아니라면 유지
+
+    }catch(error){
+      console.log(error);
     }
   }
 
@@ -165,6 +194,66 @@ const MainPage = (props,{navigation}) => {
     }
   }
 
+  const modalHeader = (
+    <View style = {styles.modalHeader}>
+      <View style = {styles.headerView}>
+        <Text style = {styles.headerCnt}>{cnt}/5</Text>
+        <Text style = {styles.headerText}>{userId}님의 흥미분야 탐색</Text>
+      </View>
+      <View style = {styles.divider}></View>
+    </View>
+  )
+
+  const modalBody=(
+    <View style = {styles.modalBody}>
+      <View style = {styles.bodyView}>
+
+      </View>
+    </View>
+  )
+  
+  const modalFooter=(
+    <View style = {styles.modalFooter}>
+      <TouchableOpacity style = {{justifyContent : "center", backgroundColor : 'skyblue', alignItems : 'center', borderRadius : 5}}
+        onPress = {() => {
+          if(foot == "다음"){
+            if(cnt == 4){
+              setFoot("완료")
+            }
+            setCnt(cnt+1);
+          }
+          else if(foot == "완료"){
+            setModalVisible(!modalVisible);
+          }
+        }}
+      >
+        <Text style = {{textAlign : 'center', fontWeight : 'bold', color : 'white', fontSize : 30, padding : 10}}>{foot}</Text>
+      </TouchableOpacity>
+    </View>
+  )
+
+  const modalContainer = (
+    <View style = {styles.modalContainer}>
+      {modalHeader}
+      {modalBody}
+      {modalFooter}
+    </View>
+  )
+
+  const modal = (
+    <Modal
+      animationType = 'fade'
+      transparent={true}
+      visible = {modalVisible}
+    >
+      <View style = {styles.modal}>
+        <View>
+          {modalContainer}
+        </View>
+      </View>
+    </Modal>
+  )
+
   //책 목록 컴포넌트화
   const bookList = bookSrc.map((bookSrc, index) => 
     (              
@@ -204,6 +293,7 @@ const MainPage = (props,{navigation}) => {
 
   return(
     <SafeAreaView style={styles.container}>
+      {modal}
       <ScrollView>
             {/* 사용자 정보 및 검색창 */}
             <View style = {{flex : 1, margin : 10}}>
@@ -418,6 +508,55 @@ const styles = StyleSheet.create({
     fontSize : 20,
     fontWeight : 'bold',
     margin : 10
+  },
+  modal : {
+    backgroundColor:"white",
+    flex:1,
+    height : "100%",
+    width : "100%",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContainer : {
+    backgroundColor:"white",
+    width: 360,
+    height : "90%",
+    borderRadius:5
+  },
+  modalHeader : {
+    padding : 10,
+  },
+  headerView : {
+
+  },
+  headerCnt : {
+    textAlign : 'center',
+    color : 'gray',
+    fontWeight : 'bold',
+    fontSize : 20,
+    
+  },
+  headerText : {
+    textAlign : 'center',
+    fontWeight : 'bold',
+    fontSize : 30
+  },
+  modalBody : {
+    backgroundColor : 'white',
+    height : "95%",
+    paddingVertical:20,
+    paddingHorizontal:10
+  },
+  bodyView : {
+    height : "60%",
+    width : 200,
+  },
+  modalFooter : {
+  },
+  divider:{
+    width:"100%",
+    height:1,
+    backgroundColor:"lightgray"
   },
 });
 
