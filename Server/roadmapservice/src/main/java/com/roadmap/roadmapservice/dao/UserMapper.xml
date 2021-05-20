@@ -35,7 +35,10 @@
     	DELETE FROM USERMAJOR WHERE UID = #{uid}
     </delete>
     
-    
+    <!-- 흥미검사 유무 확인 -->
+    <select id="checkInterest" parameterType = "string" resultType="string">
+    	SELECT USERCHECK FROM USERINFO WHERE USERID = #{userId}
+    </select>    
     
 <!--     <update id="updateUser" parameterType="userDto">
         UPDATE user 

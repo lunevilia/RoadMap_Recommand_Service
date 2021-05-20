@@ -90,6 +90,21 @@ public class mainController {
 		System.out.println(uid);
 		uMapper.deleteUser(userId);
 	}
+	
+	@GetMapping(path = "/checkuserinterest")
+	public String checkUserInterest(@RequestParam String userId) {
+		
+		try {
+			
+			result = uMapper.checkInterest(userId);
+			System.out.println(result);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 	//	@GetMapping(path = "/test")
 //	public Map<String, String> test() {
 //		Map<String, String> map = new HashMap<>();

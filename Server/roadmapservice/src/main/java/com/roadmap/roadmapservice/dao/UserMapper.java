@@ -21,6 +21,8 @@ public interface UserMapper {
 	
 	// 회원 탈퇴
 	public void deleteUser (String userId);
+	
+	public String checkInterest(String userId);
 
 	//	public void updateUser (UserDto user);
 //	public UserDto selectOneUser (String userId);
