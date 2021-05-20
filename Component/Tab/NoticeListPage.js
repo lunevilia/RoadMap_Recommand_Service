@@ -3,7 +3,7 @@ import {StyleSheet, Text, ScrollView, View,TouchableOpacity,Image} from "react-n
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const NoticePage = (props,{navigation}) => {
+const NoticeListPage = (props,{navigation}) => {
 
   const userId = props.userId;
 
@@ -48,28 +48,28 @@ const NoticePage = (props,{navigation}) => {
         <View style={styles.top}>
         <Text style={styles.category_subtitle}>게시판 목록</Text>
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            props.navigation.navigate("NoticePage", {noticeName : noticeName[0]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[0], userId : userId})
           }}>
             <Image style={styles.image} source={require('../img/1.png')} />
              <Text style={styles.category_button}>자유 게시판</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            props.navigation.navigate("NoticePage", {noticeName : noticeName[1]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[1], userId : userId})
           }}>
             <Image style={styles.image} source={require('../img/2.png')} />
              <Text style={styles.category_button}>조언방</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            props.navigation.navigate("NoticePage", {noticeName : noticeName[2]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[2], userId : userId})
           }}>
               <Image style={styles.image} source={require('../img/3.png')} />
              <Text style={[styles.category_button, {marginLeft: 14}]}>토론방</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style= {styles.button} onPress = {() =>{
-            props.navigation.navigate("NoticePage", {noticeName : noticeName[3]})
+            props.navigation.navigate("NoticePage", {noticeName : noticeName[3], userId : userId})
           }}>
             <Image style={styles.image} source={require('../img/4.png')} />
              <Text style={styles.category_button}>질문방</Text>
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NoticePage;
+export default NoticeListPage;
