@@ -1,5 +1,5 @@
 import React, {Component, useState} from 'react';
-import {TextInput, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList} from 'react-native';
+import {TextInput, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList, ScrollView} from 'react-native';
 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'; // width, height
 import{Menu, MenuOption, MenuOptions,MenuTrigger, MenuProvider} from 'react-native-popup-menu';
@@ -133,7 +133,7 @@ const ModifyRoadMap = (props, {navigation}) => {
     const Books = [
       {
         id : 'root',
-        name : ['책1', '책2', '책3']
+        name : ['책1', '책2', '책3', '책8989' , '책8989' , '책8989' , '책8989']
       },
       {
         id : 'child1',
@@ -181,11 +181,12 @@ const ModifyRoadMap = (props, {navigation}) => {
       return(
         <View>
           <TouchableOpacity onPress ={() =>{
-          }}>
-            <Image style = {styles.images}></Image>
-            <TextInput style = {styles.imageName} defaultValue={item} inputProps={{ 'aria-label': 'description' }} />
+            Linking.openURL(bookUrl[0])
+          }} style = {{alignItems : "center"}}>
+            <Image style = {styles.images}></Image> 
           </TouchableOpacity>
-          <TextInput defaultValue="Hello world" inputProps={{ 'aria-label': 'description' }} />
+            <TextInput style = {styles.inputstyle} defaultValue={item} inputProps={{ 'aria-label': 'description' }} />
+          
         </View>
         
         
@@ -245,13 +246,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                       {/* 더보기 */}
                       <View style = {{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
                           <Menu>
-                            <MenuTrigger style = {{margin : 10}}> 
-                              <Icon name='ellipsis-vertical'size={30} color="black"></Icon>
-                            </MenuTrigger>
-                            <MenuOptions>
-                              <MenuOption onSelect={() => alert('save')} text='수정'></MenuOption>
-                              <MenuOption onSelect={() => alert('delete')} text='삭제'></MenuOption>
-                            </MenuOptions>
+                            <TouchableOpacity style = {{margin : 10}}><Text style = {{fontWeight : "bold", size : 20}}>SAVE</Text></TouchableOpacity>
                           </Menu>
                       </View>
                     </View>
@@ -270,7 +265,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                         renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
                           return (
                             <View style={{
-                              flexDirection: 'column',
+                              flexDirection: 'row',
                             }}>
                               <Text
                                 style={{
@@ -282,6 +277,8 @@ const ModifyRoadMap = (props, {navigation}) => {
                                 }}>
                                 {getIndicator(isExpanded, hasChildrenNodes)} {node.texts}
                               </Text>
+                              <TouchableOpacity onPress = {() => updateModalView()}><Text style = {{size : 30, color : "white", fontWeight : "bold"}}>+</Text></TouchableOpacity>
+                              <TouchableOpacity><Icon name='close' size={20} color="white"></Icon></TouchableOpacity>
                             </View>
                           )
                         }}
@@ -311,7 +308,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                               width: 3
                             }
                           }
-                        ]} 
+                        ]}  
                         elements={data} 
                         minZoom={0.5} maxZoom={5} 
                         style={ { width : wp("80%"), height : hp("80%"), } } 
@@ -335,11 +332,15 @@ const ModifyRoadMap = (props, {navigation}) => {
                         <View style={styles.modalView}>
                           {modalBooksid ?
                           (
-                            <View style = {{borderColor : "black", borderWidth : 2, height : hp("30%"), marginTop: 10, marginBottom : 10}}>
+                            <View style = {{height : hp("30%"), marginTop: 10, marginBottom : 10}}>
+                              <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+                                <Icon name='close'size={20} color="#0067A3"></Icon>
+                              </TouchableOpacity>
                               <Text style = {{fontSize : 18, fontWeight : 'bold', alignSelf : "center"}}>{Books[modalBooksKey].id}</Text>
                               <ScrollView horizontal = {true}>
                                 <FlatList
                                   data={Books[modalBooksKey].name}
+                                  numColumns={3}
                                   renderItem={renderListItem}
                                 />
                               </ScrollView>
@@ -347,7 +348,10 @@ const ModifyRoadMap = (props, {navigation}) => {
                             
                           )
                           :
-                          (<Text>modalBooksid 거짓인 경우</Text>)
+                          (<View style = {{borderColor : "black", borderWidth : 2, marginTop: 10, marginBottom : 10}}>
+                            <Icon name='close' size={20} color="#0067A3"></Icon>
+                            <Text>modalBooksid 잘못된 접근입니다.</Text>
+                            </View>)
                           }
 
                           <View style = {{flexDirection : "row"}}>
@@ -360,9 +364,8 @@ const ModifyRoadMap = (props, {navigation}) => {
 
                             <TouchableOpacity
                               style={[styles.button, styles.buttonClose]}
-                              onPress={() => setModalVisible(!modalVisible)}
                             >
-                              <Text style={styles.textStyle}>취소</Text>
+                              <Text style={styles.textStyle}>삭제</Text>
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -383,17 +386,19 @@ const ModifyRoadMap = (props, {navigation}) => {
                         <View style={styles.modalView}>
                           {modalBooksid ?
                           (
-                            <View style = {{borderColor : "black", borderWidth : 2, height : hp("30%"), marginTop: 10, marginBottom : 10}}>
-                              <TextInput defaultValue={Books[modalBooksKey].id} inputProps={{ 'aria-label': 'description' }} />
-                              <View>
+                            <View style = {{height : hp("30%"), marginTop: 10, marginBottom : 10}}>
+                              <TouchableOpacity onPress={() => updateModalView()}>
+                                <Icon name='close'size={20} color="#0067A3"></Icon>
+                              </TouchableOpacity>
+                              <TextInput style = {styles.inputstyle} defaultValue={Books[modalBooksKey].id} inputProps={{ 'aria-label': 'description' }} />
+                              <ScrollView horizontal = {true}>
                                 <FlatList
                                   data={Books[modalBooksKey].name}
                                   numColumns={3}
                                   renderItem={renderUpdateList}
                                 />
-                              </View>
+                              </ScrollView>
                             </View>
-                            
                           )
                           :
                           (<Text>modalBooksid 거짓인 경우</Text>)
@@ -409,9 +414,8 @@ const ModifyRoadMap = (props, {navigation}) => {
 
                             <TouchableOpacity
                               style={[styles.button, styles.buttonClose]}
-                              onPress={() => updateModalView()}
                             >
-                              <Text style={styles.textStyle}>취소</Text>
+                              <Text style={styles.textStyle}>삭제</Text>
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -558,8 +562,12 @@ const styles = StyleSheet.create({
     borderColor : "black",
     borderWidth : 1
   },
-  UpdateInput : {
-    
+  inputstyle : {
+    fontSize : 15,
+    fontWeight : 'normal',
+    textAlign : 'center',
+    borderColor : "#696969",
+    borderWidth : 1
   },
 });
 
