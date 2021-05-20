@@ -153,6 +153,8 @@ const ModifyRoadMap = (props, {navigation}) => {
       },
     ]
     
+
+    // TreeView + - * 펼치기, 닫기, 단말노드
     const getIndicator = (isExpanded, hasChildrenNodes) => {
       if (!hasChildrenNodes) {
         //노드가 더이상 없을 경우
@@ -166,6 +168,7 @@ const ModifyRoadMap = (props, {navigation}) => {
       }
     };
 
+    // LongPress 노드 아이템 보기
     const renderListItem = ({item}) =>{
       // <Text style = {styles.bookmark}>{item}</Text>
       return (
@@ -177,6 +180,7 @@ const ModifyRoadMap = (props, {navigation}) => {
       </TouchableOpacity>
       )}
 
+      // 노드 아이템 수정 뷰
     const renderUpdateList = ({item}) =>{
       return(
         <View>

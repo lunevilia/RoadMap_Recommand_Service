@@ -20,6 +20,7 @@ const RoadMap = (props, {navigation}) => {
   const [Viewstate, setViewstate] = useState(true);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [modaldelete, setmodaldelete] = useState(false);
   const [modalBooksid, setBooksid] = useState(null);
   const [modalBooksKey, setBooksKey] = useState(null);
 
@@ -57,8 +58,8 @@ const RoadMap = (props, {navigation}) => {
                     children: [
                       {
                         key : 6,
-                        id: 'stem1',
-                        label: 'stem1',
+                        id: 'flower1',
+                        label: 'flower1',
                         texts : 'Spring',
                       },
                     ],
@@ -75,20 +76,20 @@ const RoadMap = (props, {navigation}) => {
 
               {
                 key : 5,
-                id: 'stem2',
-                label: 'stem2',
+                id: 'stem3',
+                label: 'stem3',
                 texts : 'MySQL',
                 children: [
                   {
                     key : 6,
-                    id: 'stem1',
-                    label: 'stem1',
+                    id: 'leaf2',
+                    label: 'leaf2',
                     texts : 'MariaDB',
                     children: [
                       {
                         key : 6,
-                        id: 'stem1',
-                        label: 'stem1',
+                        id: 'flower2',
+                        label: 'flower2',
                         texts : 'REST JSON AUTH',
                       },
                     ],
@@ -97,14 +98,14 @@ const RoadMap = (props, {navigation}) => {
               },
               {
                 key : 7,
-                id: 'stem2',
-                label: 'stem2',
+                id: 'stem4',
+                label: 'stem4',
                 texts : 'PHP',
                 children: [
                   {
                     key : 8,
-                    id: 'stem1',
-                    label: 'stem1',
+                    id: 'leaf3',
+                    label: 'leaf3',
                     texts : 'Apache',
                   },
                 ],
@@ -205,19 +206,10 @@ const RoadMap = (props, {navigation}) => {
     setsecondmodalVisible(!secondmodalVisible);
   }
 
-  // 삭제하기 확인 alert
-  const createTwoButtonAlert = () =>
-    Alert.alert(
-      "삭제하시겠습니까?",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "OK", onPress: () => console.log("OK Pressed") }
-      ]
-    );
+  // 삭제하기 확인 modal click 이벤트
+  const deleteRoadMap = () =>{
+    setmodaldelete(!modaldelete);
+  }
 
   return(
     <MenuProvider>
@@ -233,7 +225,9 @@ const RoadMap = (props, {navigation}) => {
         
               {/* 뷰 형식 선택 && 더보기 */}
                 <View style = {{flexDirection : 'column', flex : 1}}>
+                  
                   <View style = {{flex : 1, flexDirection : 'row', justifyContent: 'space-between'}}>
+                    
                     {/* 뷰 선택 */}
                     {Viewstate ? 
                     (
@@ -274,7 +268,7 @@ const RoadMap = (props, {navigation}) => {
                             props.navigation.navigate("ModifyRoadMap", {roadMapId : roadMapId, roadmap : roadmap})
                           }}><Text>수정</Text></TouchableOpacity></MenuOptions>
 
-                          <MenuOptions><TouchableOpacity style = {[styles.menuText]} onPress={createTwoButtonAlert}>
+                          <MenuOptions><TouchableOpacity style = {[styles.menuText]} onPress={deleteRoadmap}>
                             <Text>삭제</Text>
                             </TouchableOpacity></MenuOptions>
                           </MenuOptions>
@@ -451,6 +445,17 @@ const RoadMap = (props, {navigation}) => {
                       </View>
                     </View>
                   </Modal>
+
+
+                  {/* 삭제(delete)확인 모달 */}
+                  <modal animationType="fade"
+                    transparent={true}
+                    visible={modaldelete}
+                    onRequestClose={() => {
+                      setmodaldelete(!modaldelete)
+                    }}>
+
+                  </modal>
               </View>  
               
             </View>
