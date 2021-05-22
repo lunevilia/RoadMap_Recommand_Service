@@ -13,9 +13,6 @@ public interface UserMapper {
 	//회원가입 정보 insert 쿼리
 	public void insertUser (UserDto user);
 	
-	//회원가입 시, 관심 분야 insert 쿼리
-	public void insertMajor (String uid, String major);
-	
 	//로그인 확인 쿼리
 	public String login(String userId, String userPw);
 	
@@ -23,8 +20,9 @@ public interface UserMapper {
 	public String getemail(String userId);
 	
 	// 회원 탈퇴
-	public void deleteMajor(String uid);
 	public void deleteUser (String userId);
+	
+	public String checkInterest(String userId);
 
 	//	public void updateUser (UserDto user);
 //	public UserDto selectOneUser (String userId);

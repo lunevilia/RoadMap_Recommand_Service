@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <!-- 쿼리문 작성 -->
+    
+<mapper namespace="com.roadmap.roadmapinfo.dao.UserMapper">
+    
+    <select id = "getRoadmapInfo" parameterType = "roadmapDto" resultType = "hashMap">
+    	SELECT UID, RNAME, RINFO FROM ROADMAPLIST WHERE RID = (#{rid})
+    </select>
+    
+    <select id = "getUserLoveRoadmap" parameterType = "roadmapDto" resultType = "hashMap">
+    	SELECT ROADMAPLOVE.RID, ROADMAPLIST.UID, ROADMAPLIST.RNAME FROM ROADMAPLOVE, ROADMAPLIST, USERINFO WHERE ROADMAPLOVE.UID = USERINFO.UID AND USERINFO.USERID = #{userId} AND ROADMAPLOVE.RID = ROADMAPLIST.RID
+    </select>
+    
+    <select id = "getUserId" parameterType = "int" resultType = "String">
+    	SELECT USERID FROM USERINFO WHERE UID = #{uid}
+    </select>
+    
+    <select id = "getUserRoadmap" parameterType = "roadmapDto" resultType = "hashmap">
+    	SELECT ROADMAPLIST.RID, ROADMAPLIST.UID, ROADMAPLIST.RNAME FROM ROADMAPLIST, USERINFO WHERE USERINFO.USERID = #{userId} AND USERINFO.UID = ROADMAPLIST.UID
+    </select>
+    
+    <select id = "getSearchRoadmap" parameterType = "String" resultType = "hashmap">
+    	SELECT UID, RID, RNAME FROM ROADMAPLIST WHERE RNAME LIKE #{query}
+    </select>
+</mapper>

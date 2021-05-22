@@ -1,26 +1,222 @@
 import React, {useRef, useState} from 'react';
-import {View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
+import {Modal,View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
 import{Menu, MenuOption, MenuOptions,MenuTrigger, MenuProvider} from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {KeyBoardAwareScrollVeiw} from 'react-native-keyboard-aware-scroll-view';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const RoadMapSocial = (props, {navigation}) => {
+
+  // App.js ip 받아오기
+  const [ip,setIp] = useState();
+  AsyncStorage.getItem("ip").then((value) => {
+    setIp(value);
+  });
 
   const scrollRef = useRef();
 
   let roadMapId = props.route.params.roadMapId;
   let roadmap = props.route.params.roadmap;
   let userId = props.route.params.userId;
+  let ruid = props.route.params.ruid;
 
-  let [info, setInfo] = useState(["생생하며 그들의 눈에 무엇이 타오르고 있는가? 우리 눈이 그것을 보는 때에 우리의 귀는 생의 찬미를 듣는다. 그것은 웅대한 관현악이며 미묘한 교"]);
-  let [user, setUser] = useState(["익명1", "익명2", "익명3", "익명4", "익명5"]);
-  let [userComment, setUserComment] = useState(["이거 좀 괜찮네", "이거 좀 괜찮네", "이거 좀 괜찮네","이거 좀 괜찮네", "이거 좀 괜찮네"]);
-  let [date, setDate] = useState(["2021-02-23 14:57", "2021-02-23 14:57", "2021-02-23 14:57", "2021-02-23 14:57", "2021-02-23 14:57"]);
-  let [like, setLike] = useState(["♡",37]);
+  let [info, setInfo] = useState([]);
+  let [user, setUser] = useState([]);
+  let [userComment, setUserComment] = useState([]);
+  let [date, setDate] = useState([]);
+  let [like, setLike] = useState(["",0]);
 
-  // console.log(roadMapId);
-  // console.log(roadmap);
+  // menu opened option
+  const [menuState, setMenuState] = useState(true);
+
+  let [moddifyindex, setModifyIndex] = useState([]);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [head, setHead] = useState(["삭제 하시겠습니까?"]);
+  const [body, setBody] = useState([""]);
+
+  const [loading, setLoading] = useState(false);
+
+  let [getdata,setGetData] = useState(["0"]);
+
+  if(getdata == "0"){
+    if(ip != null){
+      setLoading(true);
+      getComment();
+      getRoadmapInfo();
+      getLikeInfo();
+      getRuid();
+      setGetData("1");
+      insertViewCount();
+      setLoading(false);
+    }
+  }
+
+  //조회수 추가
+  async function insertViewCount(){
+    try{
+      const response = await axios.get("http://" + ip + ":8082/insertviewcount",{
+        params : {
+          userId : userId,
+          rid : roadMapId
+        }
+      });
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  //ruid 변환
+  async function getRuid(){
+    try {
+      const response = await axios.get("http://"+ip+":8083/getruserid",{
+        params : {
+          ruid : ruid
+        }
+      });
+      
+      if (userId == response.data) {
+        setMenuState(false);
+      }
+      console.log(menuState);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  //로드맵 정보 받아오기
+  async function getRoadmapInfo(){
+    try{
+
+
+      const response = await axios.get("http://"+ip+":8083/getroadmapinfo",{
+        params : {
+          rid : roadMapId
+        }
+      });
+
+      setInfo(response.data[0].RINFO);
+
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  //로드맵 좋아요 갯수 받아오기
+  async function getLikeInfo(){
+    try {
+      
+      var newLikeArray = [...like];
+
+      const response = await axios.get("http://"+ip+":8082/getlovecount",{
+        params : {
+          rid : roadMapId
+        }
+      });
+
+      newLikeArray[1] = response.data;
+      getLikeStatus(newLikeArray)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //로드맵 좋아요 상태 받아오기
+  async function getLikeStatus(newLikeArray){
+    try {
+      
+      const response = await axios.get("http://"+ip+":8082/getlovestatus",{
+        params : {
+          rid : roadMapId,
+          uid : userId
+        }
+      });
+
+      newLikeArray[0] = response.data;
+      setLike(newLikeArray);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //댓글 정보 받아오기
+  async function getComment(){
+    try{ 
+
+      var newUserArray = [...user];
+      var newUserCommentArray = [...userComment];
+      var newDate = [...date];
+
+      const response = await axios.get("http://"+ip+":8082/getcomment",{
+        params : {
+          rid : roadMapId
+        }
+      });
+
+      let length = response.data.length
+
+      for(var i = 0; i<length; i++){
+        newUserArray.push(response.data[i].USERID);
+        newUserCommentArray.push(response.data[i].UCOMMENT);
+        newDate.push(response.data[i].UDATE);
+      }
+
+      setUser(newUserArray);
+      setUserComment(newUserCommentArray);
+      setDate(newDate);
+
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  //댓글 저장
+  async function insertComment(uid, text, date){
+    try{
+      const response = await axios.get("http://"+ip+":8082/insertcomment",{
+        params : {
+          rid : roadMapId,
+          uid : uid,
+          ucomment : text,
+          udate : date
+        }
+      });
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  //댓글 삭제 함수
+  async function delectComment(){
+    const response = await axios.get("http://"+ip+":8082/deletecomment",{
+      params : {
+        uid : user[moddifyindex],
+        udate : date[moddifyindex]
+      }
+    });
+    
+    const result = response.data
+ 
+    console.log(result);
+    if(result == "success"){
+      var newUserArray = [...user];
+      var newUserCommentArray = [...userComment];
+      var newDateArray = [...date];
+
+      newUserArray.splice(moddifyindex,1);
+      newUserCommentArray.splice(moddifyindex,1);
+      newDateArray.splice(moddifyindex,1);
+
+      setUser(newUserArray);
+      setUserComment(newUserCommentArray);
+      setDate(newDateArray);
+    }
+  }
 
   //입력된 댓글을 저장하는 state
   let [inputText, setInputText] = useState([""]);
@@ -29,7 +225,6 @@ const RoadMapSocial = (props, {navigation}) => {
   const handleCommentButtonPress = () =>{
 
     if(inputText == ""){
-
     }
 
     else{
@@ -38,9 +233,8 @@ const RoadMapSocial = (props, {navigation}) => {
       var newDateArray = [...date];
   
       var currentTime = new Date();
-  
-      var time = currentTime.getFullYear() + "-" + currentTime.getMonth() + "-" + currentTime.getDay() + " " + currentTime.getHours() + "-" + currentTime.getMinutes();
-  
+
+      var time = currentTime.toLocaleString();
       newCommentArray.push(inputText);
       newUserArray.push(userId);
       newDateArray.push(time);
@@ -48,12 +242,98 @@ const RoadMapSocial = (props, {navigation}) => {
       setUser(newUserArray);
       setUserComment(newCommentArray);
       setDate(newDateArray);
-      
+
+      insertComment(userId, inputText, time.toString());
       setInputText("");
-      
+      scrollRef.current.scrollToEnd({animated : true});
     }
 
   }
+
+  //좋아요 등록
+  async function saveLove(){
+    try {
+
+      const response = await axios.get("http://"+ip+":8082/savelove",{
+        params : {
+          rid : roadMapId,
+          uid : userId
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //좋아요 삭제
+  async function deleteLove(){
+    try{
+
+      const response = await axios.get("http://"+ip+":8082/deletelove",{
+        params: {
+          rid : roadMapId,
+          uid : userId
+        }
+      });
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const modalHeader=(
+    <View style={styles.modalHeader}>
+      <Text style={styles.title}>{head}</Text>
+      <View style={styles.divider}></View>
+    </View>
+  )
+  const modalBody=(
+    <View style={styles.modalBody}>
+      <Text style={styles.bodyText}>{body}</Text>
+    </View>
+  )
+  const modalFooter=(
+    <View style={styles.modalFooter}>
+      <View style={styles.divider}></View>
+      <View style={{flexDirection:"row-reverse",margin:10}}>
+        <TouchableOpacity style={{...styles.actions,backgroundColor:"#db2828"}} 
+          onPress={() => {
+            delectComment();
+            setModalVisible(!modalVisible);
+          }}>
+          <Text style={styles.actionText}>삭제</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{...styles.actions,backgroundColor:"#21ba45"}}
+          onPress = {() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <Text style={styles.actionText}>취소</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+  const modalContainer = (
+    <View style = {styles.modalContainer}>
+      {modalHeader}
+      {/* {modalBody} */}
+      {modalFooter}
+    </View>
+  )
+
+  const modal = (
+    <Modal
+      animationType='fade'
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+      }}>
+      <View style={styles.modal}>
+        <View>
+          {modalContainer}
+        </View>
+      </View>
+    </Modal>
+  )
 
   //좋아요 카운트
   const getLike = () => {
@@ -62,19 +342,28 @@ const RoadMapSocial = (props, {navigation}) => {
     if (newLikeArray[0].trim()==("♡")){
       newLikeArray[0] = "♥";
       newLikeArray[1] += 1; 
+      setLike(newLikeArray);
+      saveLove();
     }
     else {
       newLikeArray[0] = "♡";
       newLikeArray[1] -= 1;
+      setLike(newLikeArray);
+      deleteLove();
     }
-    setLike(newLikeArray);
+    
   }
 
   const commentlist = user.map((user, index) => 
     (              
-      <TouchableOpacity key={index} style = {styles.commentArea}>
+      <TouchableOpacity key={index} style = {styles.commentArea} onLongPress = {()=> {
+        if(user == userId){
+          setModalVisible(true);
+          setModifyIndex(index);
+        }
+      }}>
         <View style = {styles.imageandname}>
-          <Image style = {styles.userimage} source = {require('../../../assets/favicon.png')}></Image>
+          <Image style = {styles.userimage} source = {require('../../img/user.png')}></Image>
           <Text style = {styles.user}>{user}</Text>
         </View>
         <Text style = {styles.usercomment}>{userComment[index]}</Text>
@@ -85,12 +374,19 @@ const RoadMapSocial = (props, {navigation}) => {
 
     return(
       <MenuProvider>
+
+        {modal}
         <KeyboardAvoidingView keyboardVerticalOffset = {100} behavior = {Platform.OS == 'ios' ? 'padding' : 'height'}  style ={styles.container}>
 
         <SafeAreaView>
-          <ScrollView ref={scrollRef} onContentSizeChange = {() =>{
+        {/* <ScrollView ref={scrollRef} onContentSizeChange = {() =>{
             scrollRef.current.scrollToEnd({animated : true})
-          }}>
+          }}> */}
+          <Spinner
+            visible = {loading}
+            textContent = {'불러오는중'}>
+          </Spinner>
+          <ScrollView ref={scrollRef}>
             {/* 최상단 부분 */}
             <View style = {styles.topArea}>
               {/* 정보 상단 */}
@@ -101,7 +397,7 @@ const RoadMapSocial = (props, {navigation}) => {
 
                   <View style = {{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
                       <Menu>
-                        <MenuTrigger style = {{margin : 10}}> 
+                        <MenuTrigger style = {{margin : 10}} disabled = {menuState}> 
                           <Icon name='ellipsis-vertical'size={30} color="black"></Icon>
                         </MenuTrigger>
                         <MenuOptions>
@@ -259,6 +555,47 @@ const styles = StyleSheet.create({
   insert : {
     fontSize : 30,
   },
+  modal:{
+    backgroundColor:"#00000099",
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContainer:{
+    backgroundColor:"#f9fafb",
+    width:"80%",
+    borderRadius:5
+  },
+  modalHeader:{
+    
+  },
+  title:{
+    fontWeight:"bold",
+    fontSize:20,
+    padding:15,
+    color:"#000"
+  },
+  divider:{
+    width:"100%",
+    height:1,
+    backgroundColor:"lightgray"
+  },
+  modalBody:{
+    backgroundColor:"#fff",
+    paddingVertical:20,
+    paddingHorizontal:10
+  },
+  modalFooter:{
+  },
+  actions:{
+    borderRadius:5,
+    marginHorizontal:10,
+    paddingVertical:10,
+    paddingHorizontal:20
+  },
+  actionText:{
+    color:"#fff"
+  }
   });
 
 export default RoadMapSocial;

@@ -2,6 +2,7 @@ import React, {Component, useState} from 'react';
 import {StackActions} from "@react-navigation/native";
 import {Modal,View, Text,ScrollView, StyleSheet, TouchableOpacity, Dimensions, SafeAreaView, FlatList, Image, Button} from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const MyPage = (props, {navigation}) => {
 
@@ -15,7 +16,7 @@ const MyPage = (props, {navigation}) => {
 
     async function checkout(){
       try{
-        const response = await axios.get("http://"+ip+":8000/checkout",{
+        const response = await axios.get("http://"+ip+":8080/checkout",{
           params : {
             userId : userId,
           }
@@ -28,7 +29,7 @@ const MyPage = (props, {navigation}) => {
 
     (async function getEmail(){
       try{
-        const response = await axios.get("http://"+ip+":8000/getemail",{
+        const response = await axios.get("http://"+ip+":8080/getemail",{
           params : {
             userId : userId,
           }
@@ -72,10 +73,16 @@ const MyPage = (props, {navigation}) => {
                 checkout();
                 props.navigation.dispatch(
                   StackActions.replace('login'));
+                  AsyncStorage.setItem("autoLogin", "false");
+                  AsyncStorage.removeItem("inputId");
+                  AsyncStorage.removeItem("inputPw");
               }
               else if (head == "로그아웃"){
                 props.navigation.dispatch(
                   StackActions.replace('login'));
+                  AsyncStorage.setItem("autoLogin", "false");
+                  AsyncStorage.removeItem("inputId");
+                  AsyncStorage.removeItem("inputPw");
               }
             }}>
             <Text style={styles.actionText}>Yes</Text>
@@ -121,10 +128,9 @@ const MyPage = (props, {navigation}) => {
         </View>
 
         <View style = {styles.block_2}>
-          <TouchableOpacity>
-            <Text style = {styles.smalltxt}>북마크</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress = {() => {
+            props.navigation.navigate("MyLoadmap", {userId : userId, ip : ip});
+          }}>
             <Text style = {styles.smalltxt}>내 로드맵</Text>
           </TouchableOpacity>
           <TouchableOpacity>

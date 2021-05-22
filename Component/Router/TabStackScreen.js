@@ -16,8 +16,15 @@ import NoticePage from "../Tab/View/NoticePage";
 import MyPage from "../Tab/View/MyPage";
 import RoadMapSocial from "../Tab/View/RoadMapSocial";
 import RoadMap from "../Tab/View/RoadMap";
+<<<<<<< HEAD
 import commentList from "../Tab/View/CommentList";
 import ModifyRoadMap from "../Tab/View/ModifyRoadMap";
+=======
+import bookinfo from "../Tab/View/bookinfo";
+import MyLoadmap from "../Tab/View/MyLoadmap";
+import SearchPage from "../Tab/View/SearchPage";
+import boardWriting from "../Tab/View/boardWriting";
+>>>>>>> upstream/master
 
 const TabStack = createBottomTabNavigator();
 const SignUpStack = createStackNavigator();
@@ -31,27 +38,46 @@ const AppStack = createStackNavigator();
 const MainStackScreen = ({userId, ip}) => {
     return(
         <MainStack.Navigator>
-            <MainStack.Screen name = "로드맵 추천 서비스" children={({navigation})=><MainPage userId={userId} ip = {ip} navigation={navigation}/>}/>
+            <MainStack.Screen
+                name = "로드맵 추천 서비스" children={({navigation})=><MainPage userId={userId} ip = {ip} navigation={navigation}/>}
+                options = {{headerShown : false}}/>
             <MainStack.Screen name = "MyPage" component = {MyPage}/>
+            <MainStack.Screen name = "SearchPage" component = {SearchPage}/>
+            <MainStack.Screen name = "MyLoadmap" component = {MyLoadmap}/>
             <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
             <MainStack.Screen name = "RoadMap" component = {RoadMap}/>
+<<<<<<< HEAD
             <MainStack.Screen name = "commentList" component = {commentList}/>
             <MainStack.Screen name = "ModifyRoadMap" component = {ModifyRoadMap}/>
+=======
+            <MainStack.Screen name = "bookinfo" component={bookinfo}/>
+>>>>>>> upstream/master
         </MainStack.Navigator>
     );
 }
 const RoadMapCategoryStackScreen = ({userId, ip}) => {
     return(
         <RoadMapCategoryStack.Navigator>
-            <RoadMapCategoryStack.Screen name = "로드맵 카테고리" children={({navigation})=><RoadMapCategoryPage userId={userId} ip = {ip} navigation={navigation}/>}/>
+            <RoadMapCategoryStack.Screen name = "로드맵 카테고리" children={({navigation})=><RoadMapCategoryPage userId={userId} ip = {ip} navigation={navigation}/>}
+            options = {{headerShown : false}}/>
+            <MainStack.Screen name = "MyPage" component = {MyPage}/>
+            <MainStack.Screen name = "SearchPage" component = {SearchPage}/>
+            <MainStack.Screen name = "MyLoadmap" component = {MyLoadmap}/>
+            <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
         </RoadMapCategoryStack.Navigator>
     );
 }
 const NoticeListStackScreen = ({userId, ip}) => {
     return(
         <NoticeListStack.Navigator>
-            <NoticeListStack.Screen name = "게시판" children={({navigation})=><NoticeListPage userId={userId} ip = {ip} navigation={navigation}/>}/>
+            <NoticeListStack.Screen name = "게시판" children={({navigation})=><NoticeListPage userId={userId} ip = {ip} navigation={navigation}/>}
+            options = {{headerShown : false}}/>
             <NoticeListStack.Screen name = "NoticePage" component={NoticePage}/>
+            <MainStack.Screen name = "MyPage" component = {MyPage}/>
+            <MainStack.Screen name = "SearchPage" component = {SearchPage}/>
+            <MainStack.Screen name = "MyLoadmap" component = {MyLoadmap}/>
+            <MainStack.Screen name = "RoadMapSocial" component = {RoadMapSocial}/>
+            <MainStack.Screen name = "글쓰기" component = {boardWriting}/>
         </NoticeListStack.Navigator>
     );
 }
@@ -90,10 +116,10 @@ const TabStackScreen = (props, {ip}) => {
                 inactiveTintColor : 'gray',
             }}
         >
-            <TabStack.Screen name="카테고리" component={RoadMapCategoryStackScreen} />
+            <TabStack.Screen name="카테고리"  children={({navigation})=><RoadMapCategoryStackScreen userId={userId} ip = {ip} navigation={navigation}/>}/>
             {/* <TabStack.Screen name="홈" component={MainStackScreen} /> */}
             <TabStack.Screen name="홈" children={({navigation})=><MainStackScreen userId={userId} ip = {ip} navigation={navigation}/>}/>
-            <TabStack.Screen name="게시판" component={NoticeListStackScreen} />
+            <TabStack.Screen name="게시판"  children={({navigation})=><NoticeListStackScreen userId={userId} ip = {ip} navigation={navigation}/>}/>
         </TabStack.Navigator>
     );
 }
