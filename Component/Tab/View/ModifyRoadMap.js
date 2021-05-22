@@ -231,7 +231,6 @@ const ModifyRoadMap = (props, {navigation}) => {
                             style: {
                               width: 20,
                               height: 20,
-                              label : String(label),
                             }
                           },
                           

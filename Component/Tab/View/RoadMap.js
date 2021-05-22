@@ -127,6 +127,53 @@ const RoadMap = (props, {navigation}) => {
       },
     ]
 
+    const mindlayout = {
+      "root": {
+          "name": "root",
+          "children": [
+              {
+                  "name": "child-1",
+                  "children": [
+                      {
+                          "name": "child-1-1"
+                      },
+                      {
+                          "name": "child-1-2",
+                          "children": [
+                              {
+                                  "name": "child-1-2-1"
+                              }
+                          ]
+                      }
+                  ]
+              },
+              {
+                  "name": "child-2"
+              },
+              {
+                  "name": "child-3"
+              },
+              {
+                  "name": "child-4",
+                  "children": [
+                      {
+                          "name": "child-4-1"
+                      },
+                      {
+                          "name": "child-4-2"
+                      }
+                  ]
+              }
+          ]
+      },
+      "links": [
+          {
+              "source": "child-1-1",
+              "name": "special link",
+              "target": "child-2"
+          }
+      ]
+  }
 
     const [myRoot, setmyRoot] = useState(root);
     const [mySection, setmySection] = useState(sections);
@@ -200,6 +247,11 @@ const RoadMap = (props, {navigation}) => {
     const keyExtractor = (item) => {
       return item.name
     }
+
+    //if not good 삭제할 필요 있음
+    const MindmapLayouts = require('mindmap-layouts')
+    const layout = new MindmapLayouts.Standard(root, options) // root is tree node like above
+    const rootNode = layout.doLayout()
 
     return (
         <SafeAreaView style = {styles.container}>
