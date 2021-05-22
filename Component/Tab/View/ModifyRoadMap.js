@@ -1,9 +1,13 @@
 import React, {Component, useState} from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {Button, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList} from 'react-native';
 =======
 import {TextInput, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList, ScrollView} from 'react-native';
 >>>>>>> upstream/master
+=======
+import {TextInput, Modal, View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Linking, FlatList, ScrollView} from 'react-native';
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'; // width, height
 import{Menu, MenuOption, MenuOptions,MenuTrigger, MenuProvider} from 'react-native-popup-menu';
@@ -26,10 +30,15 @@ const ModifyRoadMap = (props, {navigation}) => {
     const [modalBooksKey, setBooksKey] = useState(null);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     const [secondmodalVisible, setsecondmodalVisible] = useState(false);
 
 >>>>>>> upstream/master
+=======
+    const [secondmodalVisible, setsecondmodalVisible] = useState(false);
+
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
     let roadMapId = props.route.params.roadMapId;
     let roadmap = props.route.params.roadmap;
 
@@ -40,25 +49,34 @@ const ModifyRoadMap = (props, {navigation}) => {
           id: 'root',
           label: 'root',
 <<<<<<< HEAD
+<<<<<<< HEAD
           texts : '뿌리 내용',
 =======
           texts : '웹 백엔드',
 >>>>>>> upstream/master
+=======
+          texts : '웹 백엔드',
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
           children: [
             {
               key : 1,
               id: 'child1',
               label: 'child1',
 <<<<<<< HEAD
+<<<<<<< HEAD
               texts : '줄기 내용',
 =======
               texts : 'HTML CSS JS',
 >>>>>>> upstream/master
+=======
+              texts : 'HTML CSS JS',
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
               children: [
                 {
                   key : 3,
                   id: 'stem1',
                   label: 'stem1',
+<<<<<<< HEAD
 <<<<<<< HEAD
                   texts : '가지 내용1',
                   children: [
@@ -67,10 +85,16 @@ const ModifyRoadMap = (props, {navigation}) => {
                   children: [
 
 >>>>>>> upstream/master
+=======
+                  texts : 'Jquery',
+                  children: [
+
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                     {
                       key : 4,
                       id: 'leaf1',
                       label: 'leaf1',
+<<<<<<< HEAD
 <<<<<<< HEAD
                       texts : '잎사귀',
                     },
@@ -87,6 +111,19 @@ const ModifyRoadMap = (props, {navigation}) => {
                     },
 
 >>>>>>> upstream/master
+=======
+                      texts : 'JAVA',
+                      children: [
+                        {
+                          key : 6,
+                          id: 'stem1',
+                          label: 'stem1',
+                          texts : 'Spring',
+                        },
+                      ],
+                    },
+
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                   ],
                 },
                 {
@@ -94,11 +131,16 @@ const ModifyRoadMap = (props, {navigation}) => {
                   id: 'stem2',
                   label: 'stem2',
 <<<<<<< HEAD
+<<<<<<< HEAD
                   texts : '가지 내용2',
                 },
 =======
                   texts : 'GITHUB',
                 },
+=======
+                  texts : 'GITHUB',
+                },
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
 
                 {
                   key : 5,
@@ -137,7 +179,10 @@ const ModifyRoadMap = (props, {navigation}) => {
                   ],
                 },
 
+<<<<<<< HEAD
 >>>>>>> upstream/master
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
               ],
             },
           ],
@@ -164,10 +209,14 @@ const ModifyRoadMap = (props, {navigation}) => {
       {
         id : 'root',
 <<<<<<< HEAD
+<<<<<<< HEAD
         name : ['책1', '책2', '책3']
 =======
         name : ['책1', '책2', '책3', '책8989' , '책8989' , '책8989' , '책8989']
 >>>>>>> upstream/master
+=======
+        name : ['책1', '책2', '책3', '책8989' , '책8989' , '책8989' , '책8989']
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
       },
       {
         id : 'child1',
@@ -187,6 +236,8 @@ const ModifyRoadMap = (props, {navigation}) => {
       },
     ]
     
+
+    // TreeView + - * 펼치기, 닫기, 단말노드
     const getIndicator = (isExpanded, hasChildrenNodes) => {
       if (!hasChildrenNodes) {
         //노드가 더이상 없을 경우
@@ -200,6 +251,7 @@ const ModifyRoadMap = (props, {navigation}) => {
       }
     };
 
+    // LongPress 노드 아이템 보기
     const renderListItem = ({item}) =>{
       // <Text style = {styles.bookmark}>{item}</Text>
       return (
@@ -212,7 +264,11 @@ const ModifyRoadMap = (props, {navigation}) => {
       )}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+      // 노드 아이템 수정 뷰
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
     const renderUpdateList = ({item}) =>{
       return(
         <View>
@@ -234,7 +290,10 @@ const ModifyRoadMap = (props, {navigation}) => {
       setModalVisible(!modalVisible);
       setsecondmodalVisible(!secondmodalVisible);
     }
+<<<<<<< HEAD
 >>>>>>> upstream/master
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
 
     return(
       <MenuProvider>
@@ -284,6 +343,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                       <View style = {{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
                           <Menu>
 <<<<<<< HEAD
+<<<<<<< HEAD
                             <MenuTrigger style = {{margin : 10}}> 
                               <Icon name='ellipsis-vertical'size={30} color="black"></Icon>
                             </MenuTrigger>
@@ -294,6 +354,9 @@ const ModifyRoadMap = (props, {navigation}) => {
 =======
                             <TouchableOpacity style = {{margin : 10}}><Text style = {{fontWeight : "bold", size : 20}}>SAVE</Text></TouchableOpacity>
 >>>>>>> upstream/master
+=======
+                            <TouchableOpacity style = {{margin : 10}}><Text style = {{fontWeight : "bold", size : 20}}>SAVE</Text></TouchableOpacity>
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                           </Menu>
                       </View>
                     </View>
@@ -307,28 +370,36 @@ const ModifyRoadMap = (props, {navigation}) => {
                   {Viewstate ? 
                       (
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         // 리스트 형식
 >>>>>>> upstream/master
+=======
+                        // 리스트 형식
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                       <TreeView
                         data={state.triz}
                         renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
                           return (
                             <View style={{
 <<<<<<< HEAD
+<<<<<<< HEAD
                               flexDirection: 'column',
+=======
+                              flexDirection: 'row',
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                             }}>
                               <Text
                                 style={{
-                                  height : 25,
+                                  height : 20 ,
                                   marginLeft: 25 * level,
-                                  marginBottom : 10,
                                   marginTop : 3,
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   color : "black",
                                 }}>
-                                {getIndicator(isExpanded, hasChildrenNodes)} {node.label}
+                                {getIndicator(isExpanded, hasChildrenNodes)} {node.texts}
                               </Text>
+<<<<<<< HEAD
 =======
                               flexDirection: 'row',
                             }}>
@@ -345,6 +416,10 @@ const ModifyRoadMap = (props, {navigation}) => {
                               <TouchableOpacity onPress = {() => updateModalView()}><Text style = {{size : 30, color : "white", fontWeight : "bold"}}>+</Text></TouchableOpacity>
                               <TouchableOpacity><Icon name='close' size={20} color="white"></Icon></TouchableOpacity>
 >>>>>>> upstream/master
+=======
+                              <TouchableOpacity onPress = {() => updateModalView()}><Text style = {{size : 30, color : "white", fontWeight : "bold"}}>+</Text></TouchableOpacity>
+                              <TouchableOpacity><Icon name='close' size={20} color="white"></Icon></TouchableOpacity>
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                             </View>
                           )
                         }}
@@ -359,9 +434,13 @@ const ModifyRoadMap = (props, {navigation}) => {
                       : 
                       (
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         // 그래프 형식
 >>>>>>> upstream/master
+=======
+                        // 그래프 형식
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                         <CytoscapeComponent stylesheet={[
                           {
                             selector: 'node',
@@ -378,10 +457,14 @@ const ModifyRoadMap = (props, {navigation}) => {
                             }
                           }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         ]} 
 =======
                         ]}  
 >>>>>>> upstream/master
+=======
+                        ]}  
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                         elements={data} 
                         minZoom={0.5} maxZoom={5} 
                         style={ { width : wp("80%"), height : hp("80%"), } } 
@@ -406,6 +489,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                           {modalBooksid ?
                           (
 <<<<<<< HEAD
+<<<<<<< HEAD
                             <View style = {{borderColor : "black", borderWidth : 2}}>
                               <Text style = {{fontSize : 18, fontWeight : 'bold', alignSelf : "center"}}>{Books[modalBooksKey].id}</Text>
                               <View>
@@ -417,38 +501,60 @@ const ModifyRoadMap = (props, {navigation}) => {
                               <Text style = {{fontSize : 18, fontWeight : 'bold', alignSelf : "center"}}>{Books[modalBooksKey].id}</Text>
                               <ScrollView horizontal = {true}>
 >>>>>>> upstream/master
+=======
+                            <View style = {{height : hp("30%"), marginTop: 10, marginBottom : 10}}>
+                              <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+                                <Icon name='close'size={20} color="#0067A3"></Icon>
+                              </TouchableOpacity>
+                              <Text style = {{fontSize : 18, fontWeight : 'bold', alignSelf : "center"}}>{Books[modalBooksKey].id}</Text>
+                              <ScrollView horizontal = {true}>
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                                 <FlatList
                                   data={Books[modalBooksKey].name}
                                   numColumns={3}
                                   renderItem={renderListItem}
                                 />
 <<<<<<< HEAD
+<<<<<<< HEAD
                               </View>
 =======
                               </ScrollView>
 >>>>>>> upstream/master
+=======
+                              </ScrollView>
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                             </View>
                             
                           )
                           :
 <<<<<<< HEAD
+<<<<<<< HEAD
                           (<Text>modalBooksid 거짓인 경우</Text>)
 =======
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                           (<View style = {{borderColor : "black", borderWidth : 2, marginTop: 10, marginBottom : 10}}>
                             <Icon name='close' size={20} color="#0067A3"></Icon>
                             <Text>modalBooksid 잘못된 접근입니다.</Text>
                             </View>)
+<<<<<<< HEAD
 >>>>>>> upstream/master
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                           }
 
                           <View style = {{flexDirection : "row"}}>
                             <TouchableOpacity
                               style={[styles.button, styles.buttonOpen]}
 <<<<<<< HEAD
+<<<<<<< HEAD
                               onPress={() => setModalVisible(!modalVisible)}
 =======
                               onPress={() => updateModalView()}
 >>>>>>> upstream/master
+=======
+                              onPress={() => updateModalView()}
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                             >
                               <Text style={styles.textStyle}>수정</Text>
                             </TouchableOpacity>
@@ -456,9 +562,12 @@ const ModifyRoadMap = (props, {navigation}) => {
                             <TouchableOpacity
                               style={[styles.button, styles.buttonClose]}
 <<<<<<< HEAD
+<<<<<<< HEAD
                               onPress={() => setModalVisible(!modalVisible)}
 =======
 >>>>>>> upstream/master
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                             >
                               <Text style={styles.textStyle}>삭제</Text>
                             </TouchableOpacity>
@@ -468,7 +577,10 @@ const ModifyRoadMap = (props, {navigation}) => {
                     </Modal>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
 
                     {/* 수정하기 두번째 modal */}
                     <Modal
@@ -518,7 +630,10 @@ const ModifyRoadMap = (props, {navigation}) => {
                         </View>
                       </View>
                     </Modal>
+<<<<<<< HEAD
 >>>>>>> upstream/master
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
                 </View>  
                 
               </View>
@@ -528,6 +643,7 @@ const ModifyRoadMap = (props, {navigation}) => {
                       어떻게 나오는지 확인하기 위한 텍스트 {typeof(data.label)}
                   </Text>
             </View>
+<<<<<<< HEAD
 <<<<<<< HEAD
             <View style = {styles.EditView}>
               <TouchableOpacity style = {styles.EditItems}>
@@ -550,6 +666,9 @@ const ModifyRoadMap = (props, {navigation}) => {
 =======
 
 >>>>>>> upstream/master
+=======
+
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
           </View>
         </SafeAreaView>
         <View>
@@ -569,10 +688,14 @@ const styles = StyleSheet.create({
   },
   roadview : {
 <<<<<<< HEAD
+<<<<<<< HEAD
     height : hp("60%"),
 =======
     height : hp("85%"),
 >>>>>>> upstream/master
+=======
+    height : hp("85%"),
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
     width : wp("90%"),
     backgroundColor : "#BFC8D7",
     elevation : 3,
@@ -631,13 +754,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
 <<<<<<< HEAD
+<<<<<<< HEAD
     marginTop: 22
+=======
+    marginTop: 30,
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
   },
   modalView: {
     flexDirection : "column",
-    margin: 20,
+    margin: 10,
     backgroundColor: "white",
     borderRadius: 20,
+<<<<<<< HEAD
     padding: 10,
 =======
     marginTop: 30,
@@ -649,6 +777,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingBottom : 80,
 >>>>>>> upstream/master
+=======
+    paddingBottom : 80,
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -658,10 +789,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
 <<<<<<< HEAD
+<<<<<<< HEAD
     elevation: 5
 =======
     elevation: 5,
 >>>>>>> upstream/master
+=======
+    elevation: 5,
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
   },
   bookmark : {
     alignItems: "center",
@@ -700,8 +835,11 @@ const styles = StyleSheet.create({
     borderColor : "black",
     borderWidth : 1
 <<<<<<< HEAD
+<<<<<<< HEAD
   }
 =======
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
   },
   inputstyle : {
     fontSize : 15,
@@ -710,7 +848,10 @@ const styles = StyleSheet.create({
     borderColor : "#696969",
     borderWidth : 1
   },
+<<<<<<< HEAD
 >>>>>>> upstream/master
+=======
+>>>>>>> 976298f8ad2ca3c4746f8d55d2cc012dd30314e4
 });
 
 export default ModifyRoadMap;
