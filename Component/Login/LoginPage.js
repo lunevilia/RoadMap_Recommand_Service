@@ -1,13 +1,70 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, ScrollView, TouchableOpacity, View, TextInput, KeyboardAvoidingView} from "react-native";
+import {StyleSheet, Text, ScrollView, TouchableOpacity, View, TextInput} from "react-native";
 import {StackActions} from "@react-navigation/native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from '@react-native-community/async-storage';
+import { CheckBox } from 'react-native-elements';
 
-const LoginPage = ({navigation, ip}) => {
+
+const LoginPage = ({navigation}) => {
 
     const [inputId, setInputId] = useState([""]);
     const [inputPw, setInputPw] = useState([""]);
+
+    const [ip, setIp] = useState();
+    const [autoLogin, setAutoLogin] = useState();
+
+    const [loading, setLoading] = useState(false);
+
+    const [loginCheck, setLoginCheck] = useState("0");
+
+    AsyncStorage.getItem("autoLogin").then((value) => {
+      console.log(value);
+    })
+
+    AsyncStorage.getItem("ip").then((value) =>{
+      setIp(value);
+    });
+
+    AsyncStorage.getItem("inputId").then((value) =>{
+      if(value == null){
+
+      }
+      else{
+        setInputId(value);
+      }
+    });
+    AsyncStorage.getItem("inputPw").then((value) =>{
+      if(value == null){
+
+      }
+      else{
+        setInputPw(value);
+      }
+    });
+
+    AsyncStorage.getItem("autoLogin").then((value) => {
+      
+      if(value == "false"){
+        setAutoLogin(false);
+      }
+      else if(value == "true"){
+        setAutoLogin(true);
+      }
+    })
+
+    const checkAutoLogin = () =>{
+      if(autoLogin == false){
+        setAutoLogin(true);
+        AsyncStorage.setItem("autoLogin","true");
+      }
+      else if (autoLogin == true){
+        setAutoLogin(false);
+        AsyncStorage.setItem("autoLogin", "false");
+      }
+    }
 
     const checkInfo = () =>{
         navigation.dispatch(
@@ -25,9 +82,17 @@ const LoginPage = ({navigation, ip}) => {
         }
     }
 
+    if(loginCheck == "0"){
+      if(autoLogin == true){
+        setLoginCheck("1");
+        login();
+      }
+    }
+
     async function login(){
+      setLoading(true);
         try{
-          const response = await axios.get("http://"+ip+":8000/login",{
+          const response = await axios.get("http://"+ip+":8080/login",{
             params : {
               userId : inputId,
               userPw : inputPw,
@@ -37,6 +102,10 @@ const LoginPage = ({navigation, ip}) => {
           let result = response.data
           
           if (result == "success") {
+
+            AsyncStorage.setItem("inputId", inputId);
+            AsyncStorage.setItem("inputPw", inputPw);
+
             navigation.dispatch(
                 StackActions.replace('main', {userId : inputId})
             );
@@ -47,7 +116,7 @@ const LoginPage = ({navigation, ip}) => {
           else{
             alert("로그인에 실패하였습니다.");
           }
-    
+      setLoading(false);
         }catch(error) {
           console.error(error);
 
@@ -59,7 +128,10 @@ const LoginPage = ({navigation, ip}) => {
 
   return(
       <ScrollView style={styles.container}>
-
+        <Spinner
+          visible = {loading}
+          textContent ={"로그인 중..."}>
+        </Spinner>
         <View style={styles.titleArea}>
                     <Text style={styles.title}>LoadMap</Text>
                 </View>
@@ -79,6 +151,19 @@ const LoginPage = ({navigation, ip}) => {
                 </View>
 
                 <View style={styles.buttonArea}>
+
+                    <View>
+                      <CheckBox
+                      center
+                      title = "자동 로그인"
+                      containerStyle = {{height : "100%"}}
+                      checked = {autoLogin}
+                      onPress = {checkAutoLogin}
+                      >
+
+                      </CheckBox>
+                    </View>
+
                     <TouchableOpacity 
                         style={styles.button}
                         onPress={checkInfo}>
